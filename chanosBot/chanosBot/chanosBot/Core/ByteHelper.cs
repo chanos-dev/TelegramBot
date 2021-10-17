@@ -8,18 +8,9 @@ namespace chanosBot.Core
 {
     internal static class ByteHelper
     {
-        internal static long GetKB(int number)
-        {
-            return number * 1024;
-        }
-        internal static long GetMB(int number)
-        {
-            return GetKB(number) * 1024;
-        }
+        internal static long GetKBToByte(int number) => number * 1024;
+        internal static long GetMBToByte(int number) => GetKBToByte(number) * 1024;
 
-        internal static long GetGB(int number)
-        {
-            return GetMB(number) * 1024;
-        }
+        internal static long GetGBToByte(int number) => GetMBToByte(number) * 1024;
     }
 }

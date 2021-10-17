@@ -1,4 +1,5 @@
-﻿using chanosBot.Core;
+﻿using chanosBot.Actions;
+using chanosBot.Core;
 using Serilog;
 using Serilog.Core;
 using Serilog.Events;
@@ -26,6 +27,7 @@ namespace chanosBot.Bot
         #region Properties
         private Logger Logger { get; set; }
         private TelegramBotClient Bot { get; set; }
+        private ActionController ActionController { get; set; }
         private string Token { get; set; }
 
         private bool IsRead { get; set; } = true;
@@ -41,11 +43,13 @@ namespace chanosBot.Bot
 
             Bot = new TelegramBotClient(token);
 
+            ActionController = new ActionController();
+
             Logger = new LoggerConfiguration().MinimumLevel.Information()
                                               .WriteTo.File(Path.Combine(LogPath, LogFileName),
                                               rollingInterval: RollingInterval.Hour,
                                               rollOnFileSizeLimit: true,
-                                              fileSizeLimitBytes: ByteHelper.GetMB(10))
+                                              fileSizeLimitBytes: ByteHelper.GetMBToByte(10))
                                               .CreateLogger();
 
             if (!Directory.Exists(LogPath))
@@ -75,23 +79,28 @@ namespace chanosBot.Bot
                 message.Type != MessageType.Text ||
                 !message.Text.StartsWith("/"))
             {
-                Logger.Warning($"Not support this command ({message.Type})");
-                return;
-            }
-
-            var sendMsg = message.Text;
-
-            if (sendMsg.Length > LIMIT_LENGTH)
-            {
-                Logger.Error($"Not support length of message than 4096.\n{message.Text}");
-                await Bot.SendTextMessageAsync(message.Chat.Id, "지원되지 않는 텍스트 길이 입니다.");
+                Logger.Warning($"Not support this command ({message.Text})");
                 return;
             } 
 
             try
             {
+                var sendMsg = ActionController.GetExecuteMessage(message.Text);
+
+                if (sendMsg.Length > LIMIT_LENGTH)
+                {
+                    Logger.Error($"Not support length of message than 4096.\n{message.Text}");
+                    await Bot.SendTextMessageAsync(message.Chat.Id, "지원되지 않는 텍스트 길이 입니다.");
+                    return;
+                }
+
                 await Bot.SendTextMessageAsync(message.Chat.Id, sendMsg);
                 Logger.Information($"Send Message : ({sendMsg})");
+            }
+            catch (ArgumentException ae)
+            {
+                await Bot.SendTextMessageAsync(message.Chat.Id, ae.Message);
+                Logger.Fatal(ae, this.ToString());
             }
             catch (Exception ex)
             {

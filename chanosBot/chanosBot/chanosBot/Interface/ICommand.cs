@@ -8,6 +8,7 @@ namespace chanosBot.Interface
 {
     internal interface ICommand
     {
-        void Execute();
+        string CommandName { get; }
+        string Execute(params string[] options);
     }
 }
