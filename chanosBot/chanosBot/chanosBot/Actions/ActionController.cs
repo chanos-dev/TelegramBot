@@ -20,7 +20,7 @@ namespace chanosBot.Actions
             Commands = new List<ICommand>()
             {
                 this,
-                new ActionLotto(),
+                new LottoAction(),
             };
         }
 

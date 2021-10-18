@@ -1,0 +1,17 @@
+C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\bin\Debug\ko\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.resources.dll
+C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\bin\Debug\ko\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.resources.dll
+C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\bin\Debug\ko\Microsoft.VisualStudio.TestPlatform.TestFramework.resources.dll
+C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll
+C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll
+C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll
+C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\bin\Debug\TestCode.dll
+C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\bin\Debug\TestCode.pdb
+C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.dll
+C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll
+C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.xml
+C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.xml
+C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\obj\Debug\TestCode.csproj.CoreCompileInputs.cache
+C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\obj\Debug\TestCode.csproj.CopyComplete
+C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\obj\Debug\TestCode.dll
+C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\obj\Debug\TestCode.pdb
+C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\obj\Debug\TestCode.csproj.AssemblyReference.cache
