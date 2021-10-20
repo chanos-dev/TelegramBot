@@ -15,3 +15,15 @@ C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\obj\Debug\T
 C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\obj\Debug\TestCode.dll
 C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\obj\Debug\TestCode.pdb
 C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\obj\Debug\TestCode.csproj.AssemblyReference.cache
+C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\bin\Debug\chanosBot.exe
+C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\bin\Debug\Serilog.dll
+C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\bin\Debug\Telegram.Bot.dll
+C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\bin\Debug\Serilog.Sinks.File.dll
+C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\bin\Debug\chanosBot.pdb
+C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\bin\Debug\chanosBot.exe.config
+C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\bin\Debug\Serilog.xml
+C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\bin\Debug\Telegram.Bot.xml
+C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\bin\Debug\Serilog.Sinks.File.pdb
+C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\bin\Debug\Serilog.Sinks.File.xml
+C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\bin\Debug\Newtonsoft.Json.xml

@@ -47,7 +47,7 @@ namespace chanosBot.Actions
         /// <returns></returns>
         public override string ToString()
         {
-            return "/로또 {number}";
+            return $"{CommandName} [숫자]";
         }
     }
 }

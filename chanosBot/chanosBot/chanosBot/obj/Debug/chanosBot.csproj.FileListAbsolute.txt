@@ -10,7 +10,6 @@ C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\chanosBot\bin\Debug\
 C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\chanosBot\bin\Debug\Serilog.Sinks.File.pdb
 C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\chanosBot\bin\Debug\Serilog.Sinks.File.xml
 C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\chanosBot\bin\Debug\Telegram.Bot.xml
-C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\chanosBot\obj\Debug\chanosBot.csproj.AssemblyReference.cache
 C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\chanosBot\obj\Debug\chanosBot.chanosBotService.resources
 C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\chanosBot\obj\Debug\chanosBot.ProjectInstaller.resources
 C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\chanosBot\obj\Debug\chanosBot.csproj.GenerateResource.cache

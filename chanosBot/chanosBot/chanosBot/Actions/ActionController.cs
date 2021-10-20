@@ -21,6 +21,7 @@ namespace chanosBot.Actions
             {
                 this,
                 new LottoAction(),
+                new WeatherAction(),
             };
         }
 
