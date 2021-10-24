@@ -27,3 +27,6 @@ C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\bin\Release
 C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\bin\Release\Serilog.Sinks.File.xml
 C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\bin\Release\Newtonsoft.Json.xml
 C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\obj\Release\TestCode.csproj.AssemblyReference.cache
+C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\bin\Release\HtmlAgilityPack.dll
+C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\bin\Release\HtmlAgilityPack.pdb
+C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\bin\Release\HtmlAgilityPack.xml

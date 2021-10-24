@@ -1,8 +1,11 @@
 ﻿using chanosBot.Model;
+using HtmlAgilityPack;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 
@@ -42,6 +45,135 @@ namespace TestCode
             }
 
             return string.Join("\n", weathers); 
-        } 
+        }
+
+        [TestMethod]
+        public void GetWeatherWebParsing()
+        {
+            var location = "성남시";
+
+            var url = $"https://search.naver.com/search.naver?query={location} 날씨";
+
+            var web = new HtmlWeb();
+            HtmlDocument htmlDocument = web.Load(url);
+
+            var node = htmlDocument.DocumentNode.SelectSingleNode("//div[@class='status_wrap']");
+
+            Console.WriteLine(GetNode1(node.SelectSingleNode("//div[@class='weather_graphic']")));
+            Console.WriteLine(GetNode4(node.SelectSingleNode("//ul[@class='week_list']")));
+            Console.WriteLine(GetNode2(node.SelectSingleNode("//div[@class='temperature_info']"))); 
+            Console.WriteLine(GetNode3(node.SelectSingleNode("//div[@class='report_card_wrap']")));
+        }
+
+        private string GetNode1(HtmlNode node)
+        {
+            if (node is null)
+                return string.Empty;
+
+            var sb = new StringBuilder();
+
+            var nodeItems = node.InnerText.Split(' ').Where(item => !string.IsNullOrEmpty(item));
+
+            sb.AppendLine(string.Join(" ", nodeItems.Skip(1)));
+            sb.Append($"날씨 {nodeItems.Take(1).First()}");
+
+            return sb.ToString();
+        }
+
+        private string GetNode2(HtmlNode node)
+        {
+            if (node is null)
+                return string.Empty;
+
+            var sb = new StringBuilder();
+
+            // 어제보다 2° 높아요  맑음   강수확률 0% 습도 78% 바람(남서풍) 0m/s   
+            var nodeItems = node.InnerText.Split(' ').Where(item => !string.IsNullOrEmpty(item));
+
+            try
+            {
+                sb.AppendLine(string.Join(" ", nodeItems.Take(3)));
+
+                nodeItems = nodeItems.Skip(4);
+
+                for (int idx = 0; idx < nodeItems.Count(); idx += 2)
+                    sb.AppendLine(string.Join(" : ", nodeItems.Skip(idx).Take(2)));
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return sb.ToString();
+        }
+
+        private string GetNode3(HtmlNode node)
+        {
+            if (node is null)
+                return string.Empty;
+
+            var sb = new StringBuilder();
+
+            // 미세먼지 보통     초미세먼지 보통     자외선 보통     일몰 17:44    
+            var nodeItems = node.InnerText.Split(' ').Where(item => !string.IsNullOrEmpty(item));
+
+            try
+            {
+                for (int idx = 0; idx < nodeItems.Count(); idx += 2)
+                    sb.AppendLine(string.Join(" : ", nodeItems.Skip(idx).Take(2)));
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return sb.ToString();
+        }
+
+        private string GetNode4(HtmlNode node)
+        {
+            if (node is null)
+                return string.Empty;
+
+            var sb = new StringBuilder();
+
+            // 미세먼지 보통     초미세먼지 보통     자외선 보통     일몰 17:44    
+            var nodeItems = node.InnerText.Split(' ').Where(item => !string.IsNullOrEmpty(item));
+
+            if (nodeItems.Count() < 1)
+                return string.Empty;
+
+            nodeItems = nodeItems.Skip(2).Select(item =>
+            {
+                if (item == "오전" || item == "오후")
+                    return $"{item} 강수확률";
+
+                return item;
+            }); 
+
+            try
+            {
+                for (int idx = 0; idx < nodeItems.Count(); idx += 3)
+                {
+                    if (nodeItems.Skip(idx).First() is string value)
+                    {
+                        if (value == "내일")
+                            break;
+
+                        sb.AppendLine(string.Join(" ", nodeItems.Skip(idx).Take(3)));
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return sb.ToString();
+        }
     } 
 }

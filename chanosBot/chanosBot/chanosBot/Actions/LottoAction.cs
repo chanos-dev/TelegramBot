@@ -14,7 +14,7 @@ namespace chanosBot.Actions
         public string Execute(params string[] options)
         {
             if (options.Length > 1)
-                throw new ArgumentException($"Too many options.\ne.g) {CommandName} count[default 1]");
+                throw new ArgumentException($"옵션이 너무 많습니다.\n예) {this.ToString()}");
 
             var count = 1;
 
@@ -47,7 +47,7 @@ namespace chanosBot.Actions
         /// <returns></returns>
         public override string ToString()
         {
-            return $"{CommandName} [숫자]";
+            return $"{CommandName} [숫자(기본값 : 1)]";
         }
     }
 }

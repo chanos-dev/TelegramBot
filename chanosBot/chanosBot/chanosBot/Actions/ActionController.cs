@@ -35,7 +35,7 @@ namespace chanosBot.Actions
             var findCommand = Commands.Where(command => command.CommandName == inputCommand).SingleOrDefault();
             
             if (findCommand is null)
-                throw new ArgumentException($"Not support this command ({message})");
+                throw new ArgumentException($"지원하지 않는 명령어 입니다. ({message})");
 
             return findCommand.Execute(options);
         }        
