@@ -1,4 +1,5 @@
 ﻿using chanosBot.Interface;
+using chanosBot.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace chanosBot.Actions
     {
         public string CommandName => "/로또";
 
-        public string Execute(params string[] options)
+        public BotResponse Execute(params string[] options)
         {
             if (options.Length > 1)
                 throw new ArgumentException($"옵션이 너무 많습니다.\n예) {this.ToString()}");
@@ -38,7 +39,10 @@ namespace chanosBot.Actions
                 lotto.Clear();
             }
 
-            return sb.ToString();
+            return new BotResponse()
+            {
+                Message = sb.ToString(),
+            };
         }
 
         /// <summary>

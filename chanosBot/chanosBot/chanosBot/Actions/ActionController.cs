@@ -1,4 +1,5 @@
 ﻿using chanosBot.Interface;
+using chanosBot.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace chanosBot.Actions
             };
         }
 
-        internal string GetExecuteMessage(string message)
+        internal BotResponse GetExecuteMessage(string message)
         {
             var items = message.Split(MESSAGE_SEPARATOR);
 
@@ -38,11 +39,14 @@ namespace chanosBot.Actions
                 throw new ArgumentException($"지원하지 않는 명령어 입니다. ({message})");
 
             return findCommand.Execute(options);
-        }        
+        }
 
-        public string Execute(params string[] options)
+        public BotResponse Execute(params string[] options)
         {
-            return string.Join(Environment.NewLine, Commands.Where(command => command.CommandName != this.CommandName));
+            return new BotResponse()
+            {
+                Message = string.Join(Environment.NewLine, Commands.Where(command => command.CommandName != this.CommandName)),
+            };
         }
     }
 }

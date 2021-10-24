@@ -871,3 +871,47 @@ EventLog 소스 TelegramBot을(를) 로그 Application에 만들고 있습니다
    logtoconsole = 
    logfile = C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\chanosBot\bin\Release\chanosBot.InstallLog
    assemblypath = C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\chanosBot\bin\Release\chanosBot.exe
+어셈블리 'C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\chanosBot\bin\Release\chanosBot.exe'을(를) 제거하고 있습니다.
+영향을 받는 매개 변수:
+   logtoconsole = 
+   logfile = C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\chanosBot\bin\Release\chanosBot.InstallLog
+   assemblypath = C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\chanosBot\bin\Release\chanosBot.exe
+EventLog 소스 TelegramBot을(를) 제거하고 있습니다.
+시스템에서 TelegramBot 서비스를 제거하고 있습니다...
+TelegramBot 서비스가 시스템에서 제거되었습니다.
+TelegramBot 서비스를 중지하려고 합니다.
+어셈블리 'C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\chanosBot\bin\Release\chanosBot.exe'을(를) 설치하고 있습니다.
+영향을 받는 매개 변수:
+   logtoconsole = 
+   logfile = C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\chanosBot\bin\Release\chanosBot.InstallLog
+   assemblypath = C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\chanosBot\bin\Release\chanosBot.exe
+TelegramBot 서비스를 설치하고 있습니다...
+TelegramBot 서비스가 설치되었습니다.
+EventLog 소스 TelegramBot을(를) 로그 Application에 만들고 있습니다...
+어셈블리 'C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\chanosBot\bin\Release\chanosBot.exe'을(를) 커밋하고 있습니다.
+영향을 받는 매개 변수:
+   logtoconsole = 
+   logfile = C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\chanosBot\bin\Release\chanosBot.InstallLog
+   assemblypath = C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\chanosBot\bin\Release\chanosBot.exe
+어셈블리 'C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\chanosBot\bin\Release\chanosBot.exe'을(를) 제거하고 있습니다.
+영향을 받는 매개 변수:
+   logtoconsole = 
+   logfile = C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\chanosBot\bin\Release\chanosBot.InstallLog
+   assemblypath = C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\chanosBot\bin\Release\chanosBot.exe
+EventLog 소스 TelegramBot을(를) 제거하고 있습니다.
+시스템에서 TelegramBot 서비스를 제거하고 있습니다...
+TelegramBot 서비스가 시스템에서 제거되었습니다.
+TelegramBot 서비스를 중지하려고 합니다.
+어셈블리 'C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\chanosBot\bin\Release\chanosBot.exe'을(를) 설치하고 있습니다.
+영향을 받는 매개 변수:
+   logtoconsole = 
+   logfile = C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\chanosBot\bin\Release\chanosBot.InstallLog
+   assemblypath = C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\chanosBot\bin\Release\chanosBot.exe
+TelegramBot 서비스를 설치하고 있습니다...
+TelegramBot 서비스가 설치되었습니다.
+EventLog 소스 TelegramBot을(를) 로그 Application에 만들고 있습니다...
+어셈블리 'C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\chanosBot\bin\Release\chanosBot.exe'을(를) 커밋하고 있습니다.
+영향을 받는 매개 변수:
+   logtoconsole = 
+   logfile = C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\chanosBot\bin\Release\chanosBot.InstallLog
+   assemblypath = C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\chanosBot\bin\Release\chanosBot.exe

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using chanosBot.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,6 @@ namespace chanosBot.Interface
     internal interface ICommand
     {
         string CommandName { get; }
-        string Execute(params string[] options);
+        BotResponse Execute(params string[] options);
     }
 }

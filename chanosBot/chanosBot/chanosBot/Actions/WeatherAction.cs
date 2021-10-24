@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using Telegram.Bot.Types.InputFiles;
 
 namespace chanosBot.Actions
 {
@@ -17,7 +18,7 @@ namespace chanosBot.Actions
 
         public string CommandName => "/날씨";
 
-        public string Execute(params string[] options)
+        public BotResponse Execute(params string[] options)
         {
             if (options.Length == 0)
                 throw new ArgumentException($"지역명이 없습니다.\n예) {this.ToString()}");
@@ -29,7 +30,7 @@ namespace chanosBot.Actions
             var sb = new StringBuilder();
 
             var htmlWeb = new HtmlWeb();
-            HtmlDocument htmlDocument =  htmlWeb.Load(url);
+            HtmlDocument htmlDocument = htmlWeb.Load(url);
 
             var node = htmlDocument.DocumentNode.SelectSingleNode("//div[@class='status_wrap']");
 
@@ -42,7 +43,14 @@ namespace chanosBot.Actions
             sb.AppendLine(GetSplitTemperatureInfo(node.SelectSingleNode("//div[@class='temperature_info']")));
             sb.AppendLine(GetSplitReportCardWrap(node.SelectSingleNode("//div[@class='report_card_wrap']")));
 
-            return sb.ToString();
+            return new BotResponse()
+            {
+                Message = sb.ToString(),
+                File = new InputOnlineFile(new Uri("http://photo.hankooki.com/newsphoto/v001/2020/10/05/eyoree20201005071944_O_03_C_1.jpg"))
+                {
+                    FileName = "출처 : 데일리한국 - 한국아이 닷컴, 월드크리닝",
+                },
+            };
         }
 
         private IEnumerable<string> GetSplitText(string text, char separator)

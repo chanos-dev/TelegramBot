@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Args;
 using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.InputFiles;
 
 namespace chanosBot.Bot
 {
@@ -85,17 +86,29 @@ namespace chanosBot.Bot
 
             try
             {
-                var sendMsg = ActionController.GetExecuteMessage(message.Text);
+                var botResponse = ActionController.GetExecuteMessage(message.Text);
 
-                if (sendMsg.Length > LIMIT_LENGTH)
+                if (botResponse.Message.Length > LIMIT_LENGTH)
                 {
                     Logger.Error($"Not support length of message than 4096.\n{message.Text}");
                     await Bot.SendTextMessageAsync(message.Chat.Id, "지원되지 않는 텍스트 길이 입니다.");
                     return;
                 }
 
-                await Bot.SendTextMessageAsync(message.Chat.Id, sendMsg);
-                Logger.Information($"Send Message : ({sendMsg})");
+                await Bot.SendTextMessageAsync(message.Chat.Id, botResponse.Message);
+
+                if (botResponse.HasFile)
+                {
+                    switch (botResponse.File.FileType)
+                    {
+                        case FileType.Url:
+                            var input = botResponse.File as InputOnlineFile;
+                            await Bot.SendPhotoAsync(message.Chat.Id, input, input.FileName);
+                            break;
+                    }                    
+                }
+
+                Logger.Information($"Send Message : ({botResponse.Message})");
             }
             catch (ArgumentException ae)
             {
