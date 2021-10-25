@@ -9,14 +9,16 @@ using Telegram.Bot.Types.InputFiles;
 namespace chanosBot.Model
 {
     internal class BotResponse : IDisposable
-    {
+    { 
         private bool disposedValue;
 
         internal string Message { get; set; }
 
-        internal bool HasFile => File != null;
+        internal bool HasFile => File != null;        
 
         internal IInputFile File { get; set; }
+
+        internal AutoCommand AutoCommand { get; set; }
 
         protected virtual void Dispose(bool disposing)
         {

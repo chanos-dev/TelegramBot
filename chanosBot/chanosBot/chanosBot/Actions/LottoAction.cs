@@ -12,6 +12,13 @@ namespace chanosBot.Actions
     {
         public string CommandName => "/로또";
 
+        public string[] Options { get; }
+
+        public LottoAction()
+        {
+            Options = null;
+        }
+
         public BotResponse Execute(params string[] options)
         {
             if (options.Length > 1)

@@ -28,9 +28,8 @@ namespace chanosBot.Bot
         #region Properties
         private Logger Logger { get; set; }
         private TelegramBotClient Bot { get; set; }
-        private ActionController ActionController { get; set; }
+        private ActionController ActionController { get; set; } 
         private string Token { get; set; }
-
         private bool IsRead { get; set; } = true;
 
         private string LogPath => $@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\Bot";
@@ -97,6 +96,7 @@ namespace chanosBot.Bot
 
                 await Bot.SendTextMessageAsync(message.Chat.Id, botResponse.Message);
 
+                // 파일 처리
                 if (botResponse.HasFile)
                 {
                     switch (botResponse.File.FileType)
@@ -107,6 +107,13 @@ namespace chanosBot.Bot
                             break;
                     }                    
                 }
+
+                // Auto Command Options 처리
+                if (botResponse.AutoCommand != null)
+                {
+
+                }
+
 
                 Logger.Information($"Send Message : ({botResponse.Message})");
             }

@@ -10,6 +10,7 @@ namespace chanosBot.Interface
     internal interface ICommand
     {
         string CommandName { get; }
+        string[] Options { get; }
         BotResponse Execute(params string[] options);
     }
 }

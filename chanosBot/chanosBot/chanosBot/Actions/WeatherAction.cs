@@ -18,16 +18,27 @@ namespace chanosBot.Actions
 
         public string CommandName => "/날씨";
 
+        public string[] Options { get; }
+
+        public WeatherAction()
+        {
+            Options = new[]
+            {
+                "/자동설정",
+            };
+        }
+
         public BotResponse Execute(params string[] options)
         {
+            // options => "성남시", "수정구"
+            // options => "성남시", "수정구", "/자동설정", "1130"
+
             if (options.Length == 0)
                 throw new ArgumentException($"지역명이 없습니다.\n예) {this.ToString()}");
 
             var location = string.Join(" ", options);
 
-            var url = $"{WeatherURL}{location} 날씨";
-
-            var sb = new StringBuilder();
+            var url = $"{WeatherURL}{location} 날씨";            
 
             var htmlWeb = new HtmlWeb();
             HtmlDocument htmlDocument = htmlWeb.Load(url);
@@ -36,6 +47,8 @@ namespace chanosBot.Actions
 
             if (node is null)
                 throw new ArgumentException($"올바른 지역명을 입력해주세요.");
+
+            var sb = new StringBuilder();            
 
             sb.AppendLine($"오늘의 {location} 날씨");
             sb.AppendLine(GetSplitWeatherGraphic(node.SelectSingleNode("//div[@class='weather_graphic']")));
@@ -53,6 +66,7 @@ namespace chanosBot.Actions
             };
         }
 
+        #region Split Weather Methods
         private IEnumerable<string> GetSplitText(string text, char separator)
         {
             return text.Split(' ').Where(item => !string.IsNullOrEmpty(item));
@@ -63,7 +77,7 @@ namespace chanosBot.Actions
             if (node is null)
                 return string.Empty;
 
-            var nodeItems = node.InnerText.Split(' ').Where(item => !string.IsNullOrEmpty(item));
+            var nodeItems = GetSplitText(node.InnerText, ' ');
 
             if (nodeItems.Count() < 1)
                 return string.Empty;
@@ -81,7 +95,7 @@ namespace chanosBot.Actions
             if (node is null)
                 return string.Empty;
 
-            var nodeItems = node.InnerText.Split(' ').Where(item => !string.IsNullOrEmpty(item));
+            var nodeItems = GetSplitText(node.InnerText, ' ');
 
             if (nodeItems.Count() < 1)
                 return string.Empty;
@@ -126,7 +140,7 @@ namespace chanosBot.Actions
             if (node is null)
                 return string.Empty;
 
-            var nodeItems = node.InnerText.Split(' ').Where(item => !string.IsNullOrEmpty(item));
+            var nodeItems = GetSplitText(node.InnerText, ' ');
 
             if (nodeItems.Count() < 1)
                 return string.Empty;
@@ -155,7 +169,7 @@ namespace chanosBot.Actions
             if (node is null)
                 return string.Empty;
 
-            var nodeItems = node.InnerText.Split(' ').Where(item => !string.IsNullOrEmpty(item));
+            var nodeItems = GetSplitText(node.InnerText, ' ');
 
             if (nodeItems.Count() < 1)
                 return string.Empty;
@@ -174,6 +188,7 @@ namespace chanosBot.Actions
 
             return sb.ToString();
         }
+        #endregion
 
         /// <summary>
         /// 도움말 표시
@@ -181,7 +196,11 @@ namespace chanosBot.Actions
         /// <returns></returns>
         public override string ToString()
         {
-            return $"{CommandName} [지역]";
+            var sb = new StringBuilder();
+            sb.AppendLine($"{CommandName} [지역]");
+            sb.Append($"{CommandName} [지역] /자동설정 [시간(24시표기:1130)]");
+
+            return sb.ToString();
         }
     }
 }

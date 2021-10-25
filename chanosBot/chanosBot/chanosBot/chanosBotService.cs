@@ -21,7 +21,7 @@ namespace chanosBot
         }
 
         private void InitializeControl()
-        {            
+        {
             TelegramBot = new TelegramBot("key");
         }
 
