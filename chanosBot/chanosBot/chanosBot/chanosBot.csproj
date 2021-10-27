@@ -79,6 +79,7 @@
     <Compile Include="Model\AutoCommand.cs" />
     <Compile Include="Model\BotResponse.cs" />
     <Compile Include="Model\Option.cs" />
+    <Compile Include="Model\Time.cs" />
     <Compile Include="Model\Weather.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProjectInstaller.cs">

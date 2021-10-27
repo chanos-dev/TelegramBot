@@ -16,6 +16,8 @@ namespace chanosBot.Actions
 
         public string CommandName => "/도움말";
 
+        public Option[] CommandOptions => throw new NotImplementedException();
+
         public ActionController()
         { 
             Commands = new List<ICommand>()
@@ -31,7 +33,7 @@ namespace chanosBot.Actions
             var items = message.Split(MESSAGE_SEPARATOR);
 
             var inputCommand = items[0];
-            var options = items.Skip(1).ToArray();
+            var options = items;// items.Skip(1).ToArray();
 
             var findCommand = Commands.Where(command => command.CommandName == inputCommand).SingleOrDefault();
             

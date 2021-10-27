@@ -1,7 +1,9 @@
-﻿using chanosBot.Interface;
+﻿using chanosBot.Core;
+using chanosBot.Interface;
 using chanosBot.Model;
 using HtmlAgilityPack;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -12,19 +14,30 @@ using Telegram.Bot.Types.InputFiles;
 
 namespace chanosBot.Actions
 {
-    internal class WeatherAction : ICommand
+    public class WeatherAction : ICommand
     {
+        private string AUTO_COMMAND_OPTION = "/자동설정";
+
         private string WeatherURL => "https://search.naver.com/search.naver?query=";
 
         public string CommandName => "/날씨";
 
-        public string[] Options { get; }
+        public Option[] CommandOptions { get; }
 
         public WeatherAction()
         {
-            Options = new[]
+            CommandOptions = new[]
             {
-                "/자동설정",
+                new Option() 
+                { 
+                    OptionName = CommandName, 
+                    OptionLimitCounts = 0 
+                },
+                new Option() 
+                { 
+                    OptionName = AUTO_COMMAND_OPTION, 
+                    OptionLimitCounts = 1 
+                },
             };
         }
 
@@ -33,10 +46,13 @@ namespace chanosBot.Actions
             // options => "성남시", "수정구"
             // options => "성남시", "수정구", "/자동설정", "1130"
 
-            if (options.Length == 0)
-                throw new ArgumentException($"지역명이 없습니다.\n예) {this.ToString()}");
+            if (options.Skip(1).Count() == 0)
+                throw new ArgumentException($"지역명은 필수 입니다.\n예) {this}");
 
-            var location = string.Join(" ", options);
+            CommandOptions.FillOptionPair(options);
+            CommandOptions.VerifyOptionCount();             
+            
+            var location = string.Join(" ", CommandOptions.FindOption(CommandName).OptionList);
 
             var url = $"{WeatherURL}{location} 날씨";            
 
@@ -56,6 +72,33 @@ namespace chanosBot.Actions
             sb.AppendLine(GetSplitTemperatureInfo(node.SelectSingleNode("//div[@class='temperature_info']")));
             sb.AppendLine(GetSplitReportCardWrap(node.SelectSingleNode("//div[@class='report_card_wrap']")));
 
+            AutoCommand autoCommand = null;
+
+            Option auto = CommandOptions.FindOption(AUTO_COMMAND_OPTION);
+
+            if (auto.HasOption)
+            {
+                autoCommand = new AutoCommand();
+
+                var strTime = auto.OptionList.First();
+
+                var hour = strTime.Substring(0, 2);
+                var minute = strTime.Substring(2, 2); 
+
+                if (!string.IsNullOrEmpty(hour) &&
+                    !string.IsNullOrEmpty(minute))
+                {
+                    if (Time.VerifyTime(hour, minute, out Time time))
+                        autoCommand.Time = time;
+                    else
+                        throw new ArgumentException("올바른 시간을 입력해주세요.");
+                }
+                else
+                    autoCommand.Time = Time.Empty();
+
+                autoCommand.Command = this;
+            }
+
             return new BotResponse()
             {
                 Message = sb.ToString(),
@@ -63,6 +106,7 @@ namespace chanosBot.Actions
                 {
                     FileName = "출처 : 데일리한국 - 한국아이 닷컴, 월드크리닝",
                 },
+                AutoCommand = autoCommand,
             };
         }
 

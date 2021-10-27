@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace chanosBot.Interface
 {
-    internal interface ICommand
+    public interface ICommand
     {
         string CommandName { get; }
-        string[] Options { get; }
+        Option[] CommandOptions { get; }
         BotResponse Execute(params string[] options);
     }
 }

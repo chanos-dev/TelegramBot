@@ -1,4 +1,5 @@
-﻿using System;
+﻿using chanosBot.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,11 +9,22 @@ namespace chanosBot.Core
 {
     internal class AutoCommandHelper
     {
-        private Dictionary<string, string> AutoCommand { get; set; } 
+        internal HashSet<AutoCommand> AutoCommand { get; set; }
 
-        public void Run()
+        public AutoCommandHelper()
         {
+            AutoCommand = new HashSet<AutoCommand>();
+        }
 
+        internal void Run()
+        {
+            Task.Factory.StartNew(() =>
+            {
+                while(true)
+                {
+
+                }
+            });
         }
     }
 }

@@ -10,15 +10,13 @@ namespace chanosBot.Model
 {    
     internal class AutoCommand
     { 
-        internal string ChatID { get; set; }
+        internal long ChatID { get; set; }
 
-        internal string UserID { get; set; }
+        internal int UserID { get; set; }
 
         internal EnumWeekValue Week { get; set; }
 
-        internal int Hour { get; set; }
-
-        internal int Minute { get; set; }
+        internal Time Time { get; set; } 
 
         internal ICommand Command { get; set; }
     }

@@ -12,22 +12,22 @@ namespace chanosBot.Actions
     {
         public string CommandName => "/로또";
 
-        public string[] Options { get; }
+        public Option[] CommandOptions { get; }
 
         public LottoAction()
         {
-            Options = null;
+            CommandOptions = null;
         }
 
         public BotResponse Execute(params string[] options)
         {
-            if (options.Length > 1)
+            if (options.Length > 2)
                 throw new ArgumentException($"옵션이 너무 많습니다.\n예) {this.ToString()}");
 
             var count = 1;
 
-            if (options.Length == 1 &&
-                int.TryParse(options[0], out int result) &&
+            if (options.Length == 2 &&
+                int.TryParse(options[1], out int result) &&
                 result > 0)
                 count = result;
 

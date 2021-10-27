@@ -8,7 +8,7 @@ using Telegram.Bot.Types.InputFiles;
 
 namespace chanosBot.Model
 {
-    internal class BotResponse : IDisposable
+    public class BotResponse : IDisposable
     { 
         private bool disposedValue;
 

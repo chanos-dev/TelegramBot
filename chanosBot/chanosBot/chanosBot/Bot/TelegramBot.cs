@@ -29,6 +29,7 @@ namespace chanosBot.Bot
         private Logger Logger { get; set; }
         private TelegramBotClient Bot { get; set; }
         private ActionController ActionController { get; set; } 
+        private AutoCommandHelper AutoCommandHelper { get; set; }
         private string Token { get; set; }
         private bool IsRead { get; set; } = true;
 
@@ -44,6 +45,7 @@ namespace chanosBot.Bot
             Bot = new TelegramBotClient(token);
 
             ActionController = new ActionController();
+            AutoCommandHelper = new AutoCommandHelper();
 
             Logger = new LoggerConfiguration().MinimumLevel.Information()
                                               .WriteTo.File(Path.Combine(LogPath, LogFileName),
@@ -111,7 +113,10 @@ namespace chanosBot.Bot
                 // Auto Command Options 처리
                 if (botResponse.AutoCommand != null)
                 {
+                    botResponse.AutoCommand.ChatID = message.Chat.Id;
+                    botResponse.AutoCommand.UserID = message.From.Id;
 
+                    AutoCommandHelper.AutoCommand.Add(botResponse.AutoCommand);
                 }
 
 
@@ -139,6 +144,8 @@ namespace chanosBot.Bot
 
             Logger.Information("Run Bot.StartReceiving();");
             Bot.StartReceiving();
+
+            AutoCommandHelper.Run();
         }
 
         public override string ToString() => "TelegramBot";

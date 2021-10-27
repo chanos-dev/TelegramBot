@@ -6,11 +6,14 @@ using System.Threading.Tasks;
 
 namespace chanosBot.Model
 {
-    internal class Option
+    public class Option
     {
         internal string OptionName { get; set; }
 
-        internal int OptionCounts { get; set; }
+        internal int OptionLimitCounts { get; set; }
 
+        internal bool HasOption => OptionList.Count > 0;
+
+        internal List<string> OptionList { get; set; } = new List<string>();
     }
 }
