@@ -26,7 +26,6 @@ namespace chanosBot.Bot
         #endregion
 
         #region Properties
-        private Logger Logger { get; set; }
         private TelegramBotClient Bot { get; set; }
         private ActionController ActionController { get; set; } 
         private AutoCommandHelper AutoCommandHelper { get; set; }
@@ -43,11 +42,11 @@ namespace chanosBot.Bot
             this.Token = token;
 
             Bot = new TelegramBotClient(token);
-
+            
             ActionController = new ActionController();
             AutoCommandHelper = new AutoCommandHelper();
 
-            Logger = new LoggerConfiguration().MinimumLevel.Information()
+            Log.Logger = new LoggerConfiguration().MinimumLevel.Information()
                                               .WriteTo.File(Path.Combine(LogPath, LogFileName),
                                               rollingInterval: RollingInterval.Hour,
                                               rollOnFileSizeLimit: true,
@@ -68,7 +67,7 @@ namespace chanosBot.Bot
 
             Bot.OnMessage += Bot_OnMessage;
 
-            Logger.Information($"Initialize {me.FirstName} Bot.");
+            Log.Logger.Information($"Initialize {me.FirstName} Bot.");
 
             IsRead = false;
         }
@@ -81,7 +80,7 @@ namespace chanosBot.Bot
                 message.Type != MessageType.Text ||
                 !message.Text.StartsWith("/"))
             {
-                Logger.Warning($"Not support this command ({message.Text})");
+                Log.Logger.Warning($"Not support this command ({message.Text})");
                 return;
             } 
 
@@ -91,7 +90,7 @@ namespace chanosBot.Bot
 
                 if (botResponse.Message.Length > LIMIT_LENGTH)
                 {
-                    Logger.Error($"Not support length of message than 4096.\n{message.Text}");
+                    Log.Logger.Error($"Not support length of message than 4096.\n{message.Text}");
                     await Bot.SendTextMessageAsync(message.Chat.Id, "지원되지 않는 텍스트 길이 입니다.");
                     return;
                 }
@@ -116,20 +115,19 @@ namespace chanosBot.Bot
                     botResponse.AutoCommand.ChatID = message.Chat.Id;
                     botResponse.AutoCommand.UserID = message.From.Id;
 
-                    AutoCommandHelper.AutoCommand.Add(botResponse.AutoCommand);
+                    AutoCommandHelper.AddAutoCommand(botResponse.AutoCommand); 
                 }
 
-
-                Logger.Information($"Send Message : ({botResponse.Message})");
+                Log.Logger.Information($"Send Message : ({botResponse.Message})");
             }
             catch (ArgumentException ae)
             {
                 await Bot.SendTextMessageAsync(message.Chat.Id, ae.Message);
-                Logger.Fatal(ae, this.ToString());
+                Log.Logger.Fatal(ae, this.ToString());
             }
             catch (Exception ex)
             {
-                Logger.Fatal(ex, this.ToString());
+                Log.Logger.Fatal(ex, this.ToString());
             }
         }
         #endregion
@@ -142,7 +140,7 @@ namespace chanosBot.Bot
                 Thread.Sleep(500);
             }
 
-            Logger.Information("Run Bot.StartReceiving();");
+            Log.Logger.Information("Run Bot.StartReceiving();");
             Bot.StartReceiving();
 
             AutoCommandHelper.Run();
@@ -158,7 +156,7 @@ namespace chanosBot.Bot
             {
                 if (disposing) { }
 
-                Logger?.Dispose();
+                Log.CloseAndFlush();
                 disposedValue = true;
             }
         }

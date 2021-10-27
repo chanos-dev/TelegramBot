@@ -8,16 +8,80 @@ using System.Threading.Tasks;
 
 namespace chanosBot.Model
 {    
-    internal class AutoCommand
-    { 
-        internal long ChatID { get; set; }
+    public class AutoCommand : IEquatable<AutoCommand>
+    {
+        #region Properties
+        public long ChatID { get; set; }
+         
+        public int UserID { get; set; }
+         
+        public EnumWeekValue Week { get; set; }
+         
+        public Time Time { get; set; } 
+         
+        public ICommand Command { get; set; }
 
-        internal int UserID { get; set; }
+        public string[] Options { get; set; }
+        #endregion
 
-        internal EnumWeekValue Week { get; set; }
+        #region override methods
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj as AutoCommand);
+        }
 
-        internal Time Time { get; set; } 
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
 
-        internal ICommand Command { get; set; }
+        public override string ToString()
+        {
+            return $"ChatID : {ChatID}, UserID : {UserID}, Command : {Command.CommandName}, Option : {string.Join(", ", Options)}";
+        }
+        #endregion
+
+        #region operator
+
+        public static bool operator== (AutoCommand left, AutoCommand right)
+        {
+            if (left is null)
+            {
+                if (right is null)
+                    return true;
+
+                return false;
+            }
+
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(AutoCommand left, AutoCommand right)
+        {
+            return !(left == right);
+        }
+
+        #endregion
+
+        #region IEquatable Interface
+        public bool Equals(AutoCommand other)
+        {
+            if (other is null)
+                return false;
+
+            if (object.ReferenceEquals(this, other))
+                return true;
+            
+            // Command interface는 한 개만 생성되기 때문에 Ref 비교로.
+            return (this.ChatID == other.ChatID) && (this.UserID == other.UserID) && (this.Command == other.Command);
+        }
+        #endregion
+    }
+
+    public class AutoCommandComparer : IEqualityComparer<AutoCommand>
+    {
+        public bool Equals(AutoCommand x, AutoCommand y) => x.Equals(y);
+
+        public int GetHashCode(AutoCommand obj) => base.GetHashCode();
     }
 }

@@ -8,7 +8,7 @@ namespace chanosBot.Enum
 {
     
     [Flags]
-    enum EnumWeekValue
+    public enum EnumWeekValue
     { 
         Sun = 1 >> 0,
         Mon = 1 >> 1,

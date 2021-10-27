@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace chanosBot.Actions
 {
-    internal class LottoAction : ICommand
+    public class LottoAction : ICommand
     {
         public string CommandName => "/로또";
 

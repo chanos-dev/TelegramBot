@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace chanosBot.Model
 {
-    internal struct Time
+    public struct Time
     {
         private const int MinHour = 0;
         private const int MaxHour = 23;
@@ -14,9 +14,9 @@ namespace chanosBot.Model
         private const int MinMinute = 0;
         private const int MaxMinute = 59;
 
-        internal int Hour { get; set; }
+        public int Hour { get; set; }
 
-        internal int Minute { get; set; }
+        public int Minute { get; set; }
 
         internal bool CheckOutOfTime()
         {

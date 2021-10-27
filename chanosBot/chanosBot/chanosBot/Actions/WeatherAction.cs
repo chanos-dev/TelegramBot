@@ -97,6 +97,7 @@ namespace chanosBot.Actions
                     autoCommand.Time = Time.Empty();
 
                 autoCommand.Command = this;
+                autoCommand.Options = new[] { CommandName }.Concat(CommandOptions.FindOption(CommandName).OptionList.ToArray()).ToArray();
             }
 
             return new BotResponse()
@@ -242,7 +243,7 @@ namespace chanosBot.Actions
         {
             var sb = new StringBuilder();
             sb.AppendLine($"{CommandName} [지역]");
-            sb.Append($"{CommandName} [지역] /자동설정 [시간(24시표기:1130)]");
+            sb.Append($"{CommandName} [지역] /자동설정 [시간(24시표기:0830)]");
 
             return sb.ToString();
         }
