@@ -20,4 +20,6 @@ C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\chanosBot\obj\Releas
 C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\chanosBot\bin\Release\HtmlAgilityPack.dll
 C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\chanosBot\bin\Release\HtmlAgilityPack.pdb
 C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\chanosBot\bin\Release\HtmlAgilityPack.xml
+C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\chanosBot\bin\Release\Serilog.Sinks.Console.dll
+C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\chanosBot\bin\Release\Serilog.Sinks.Console.xml
 C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\chanosBot\obj\Release\chanosBot.csproj.AssemblyReference.cache

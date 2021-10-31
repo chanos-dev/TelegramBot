@@ -1,5 +1,6 @@
 ﻿using chanosBot.Actions;
 using chanosBot.Core;
+using chanosBot.Model;
 using Serilog;
 using Serilog.Core;
 using Serilog.Events;
@@ -17,7 +18,7 @@ using Telegram.Bot.Types.InputFiles;
 
 namespace chanosBot.Bot
 {
-    internal class TelegramBot : IDisposable
+    public class TelegramBot : IDisposable
     {
         #region Fields
         private const int LIMIT_LENGTH = 4096; 
@@ -44,9 +45,12 @@ namespace chanosBot.Bot
             Bot = new TelegramBotClient(token);
             
             ActionController = new ActionController();
+
             AutoCommandHelper = new AutoCommandHelper();
+            AutoCommandHelper.EventSendMessage += AutoCommandHelper_EventSendMessage;
 
             Log.Logger = new LoggerConfiguration().MinimumLevel.Information()
+                                              .WriteTo.Console()  
                                               .WriteTo.File(Path.Combine(LogPath, LogFileName),
                                               rollingInterval: RollingInterval.Hour,
                                               rollOnFileSizeLimit: true,
@@ -57,7 +61,8 @@ namespace chanosBot.Bot
                 Directory.CreateDirectory(LogPath);
 
             Initialize();
-        }
+        } 
+
         #endregion
 
         #region Initialize
@@ -106,7 +111,9 @@ namespace chanosBot.Bot
                             var input = botResponse.File as InputOnlineFile;
                             await Bot.SendPhotoAsync(message.Chat.Id, input, input.FileName);
                             break;
-                    }                    
+                    }
+
+                    Log.Logger.Information($"Send Photo : ({botResponse.File.FileType})");
                 }
 
                 // Auto Command Options 처리
@@ -115,7 +122,8 @@ namespace chanosBot.Bot
                     botResponse.AutoCommand.ChatID = message.Chat.Id;
                     botResponse.AutoCommand.UserID = message.From.Id;
 
-                    AutoCommandHelper.AddAutoCommand(botResponse.AutoCommand); 
+                    AutoCommandHelper.AddAutoCommand(botResponse.AutoCommand);
+                    await Bot.SendTextMessageAsync(message.Chat.Id, "자동설정 되었습니다.");
                 }
 
                 Log.Logger.Information($"Send Message : ({botResponse.Message})");
@@ -132,8 +140,31 @@ namespace chanosBot.Bot
         }
         #endregion
 
+        #region Events
+        private async void AutoCommandHelper_EventSendMessage(AutoCommand autoCommand)
+        {
+            var botResponse = autoCommand.Command.Execute(autoCommand.Options);
 
-        internal void Run()
+            await Bot.SendTextMessageAsync(autoCommand.ChatID, botResponse.Message);
+            Log.Logger.Information($"Send Message : ({botResponse.Message})");
+            // 파일 처리
+            if (botResponse.HasFile)
+            {
+                switch (botResponse.File.FileType)
+                {
+                    case FileType.Url:
+                        var input = botResponse.File as InputOnlineFile;
+                        await Bot.SendPhotoAsync(autoCommand.ChatID, input, input.FileName);
+                        break;
+                }
+
+                Log.Logger.Information($"Send Photo : ({botResponse.File.FileType})");
+            }
+        }
+        #endregion
+
+
+        public void Run()
         { 
             while(IsRead)
             {

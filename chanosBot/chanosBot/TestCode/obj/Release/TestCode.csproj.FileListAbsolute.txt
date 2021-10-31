@@ -30,3 +30,5 @@ C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\obj\Release
 C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\bin\Release\HtmlAgilityPack.dll
 C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\bin\Release\HtmlAgilityPack.pdb
 C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\bin\Release\HtmlAgilityPack.xml
+C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\bin\Release\Serilog.Sinks.Console.dll
+C:\Users\Chanos\Desktop\git\TelegramBot\chanosBot\chanosBot\TestCode\bin\Release\Serilog.Sinks.Console.xml

@@ -1,4 +1,5 @@
-﻿using chanosBot.Model;
+﻿using chanosBot.Common;
+using chanosBot.Model;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,9 @@ namespace chanosBot.Core
     {
         private HashSet<AutoCommand> AutoCommands { get; set; }
 
+        public delegate void DelegateSendMessage(AutoCommand autoCommand);
+        public event DelegateSendMessage EventSendMessage;
+
         public AutoCommandHelper()
         {
             AutoCommands = new HashSet<AutoCommand>(new AutoCommandComparer());
@@ -25,7 +29,9 @@ namespace chanosBot.Core
             {
                 var findAutoCommand = AutoCommands.Where(AutoCommand => AutoCommand == autoCommand).Single();
 
+                findAutoCommand.Options = autoCommand.Options;
                 findAutoCommand.Time = autoCommand.Time;
+                autoCommand.IsSent = false;
 
                 Log.Logger.Information($"Modify Auto Command ({autoCommand})");
             }
@@ -45,16 +51,35 @@ namespace chanosBot.Core
 
                 while (true)
                 {
-                    // todo: 자동설정 시간에 맞는 command 가져오기.
-                    var startCommands = AutoCommands;
+                    if (EventSendMessage is null)
+                        continue;
+
+                    var curTime = DateTime.Now.TimeOfDay;
+
+                    // TODO : IsSent process - Refactoring
+                    AutoCommands.ToList().ForEach(command =>
+                    {
+                        if (!command.IsSent)
+                            return;
+
+                        if (!StructHelper.CompareTimeSpanHourMinutePair((TimeSpan)command.Time, curTime))
+                            command.IsSent = false;
+                    });
+
+                    var startCommands = AutoCommands.Where(command =>
+                    {
+                        return StructHelper.CompareTimeSpanHourMinutePair((TimeSpan)command.Time, curTime) && !command.IsSent;
+                    });
 
                     foreach (var startCommand in startCommands)
                     {
-                        startCommand.Command.Execute(startCommand.Options);
+                        EventSendMessage.Invoke(startCommand);
+                        startCommand.IsSent = true;
+
                         Log.Logger.Information($"Start command {startCommand} automatically.");
                     }
                     
-                    Thread.Sleep(1000);
+                    Thread.Sleep(5000);
                 }
             });
         }

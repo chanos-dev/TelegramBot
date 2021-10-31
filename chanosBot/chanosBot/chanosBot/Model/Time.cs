@@ -18,6 +18,11 @@ namespace chanosBot.Model
 
         public int Minute { get; set; }
 
+        public static explicit operator TimeSpan(Time time)
+        {
+            return new TimeSpan(time.Hour, time.Minute, 0);
+        }
+
         internal bool CheckOutOfTime()
         {
             if (Hour < MinHour ||
@@ -63,6 +68,9 @@ namespace chanosBot.Model
             return time.CheckOutOfTime();
         }
 
-        
+        public override string ToString()
+        {
+            return $"Hour : {Hour}, Minute : {Minute}";
+        }
     }
 }

@@ -22,6 +22,8 @@ namespace chanosBot.Model
         public ICommand Command { get; set; }
 
         public string[] Options { get; set; }
+
+        public bool IsSent { get; set; }
         #endregion
 
         #region override methods
@@ -37,7 +39,7 @@ namespace chanosBot.Model
 
         public override string ToString()
         {
-            return $"ChatID : {ChatID}, UserID : {UserID}, Command : {Command.CommandName}, Option : {string.Join(", ", Options)}";
+            return $"ChatID : {ChatID}, UserID : {UserID}, Command : {Command.CommandName}, Time : ({Time}), Option : {string.Join(", ", Options)}";
         }
         #endregion
 

@@ -1,4 +1,5 @@
-﻿using chanosBot.Model;
+﻿using chanosBot.Common;
+using chanosBot.Model;
 using HtmlAgilityPack;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -14,6 +15,17 @@ namespace TestCode
     [TestClass]
     public class LogicTest
     {
+        [TestMethod]
+        public void CompareTimeSpan()
+        {
+            var source = new TimeSpan(19, 11, 0);
+            var target = DateTime.Now.TimeOfDay;
+
+
+
+            Assert.IsTrue(StructHelper.CompareTimeSpanHourMinutePair(source, target));
+        }
+
         [TestMethod]
         public void GetWeather()
         {
