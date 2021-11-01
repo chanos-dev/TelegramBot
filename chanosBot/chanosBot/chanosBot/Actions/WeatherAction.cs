@@ -16,6 +16,8 @@ namespace chanosBot.Actions
 {
     public class WeatherAction : ICommand
     {
+        private string[] WeatherSplitItems { get; }
+
         private string AUTO_COMMAND_OPTION = "/자동설정";
 
         private string WeatherURL => "https://search.naver.com/search.naver?query=";
@@ -38,6 +40,13 @@ namespace chanosBot.Actions
                     OptionName = AUTO_COMMAND_OPTION, 
                     OptionLimitCounts = 1 
                 },
+            };
+
+            WeatherSplitItems = new[]
+            {
+                "오전",
+                "오후",
+                "최저기온",
             };
         }
 
@@ -153,30 +162,32 @@ namespace chanosBot.Actions
                     return $"{item} 강수확률";
 
                 return item;
-            });
+            }).TakeWhile(item => item != "내일"); 
 
-            try
+            var items = new List<string>();
+            foreach (var nodeItem in nodeItems)
             {
-                for (int idx = 0; idx < nodeItems.Count(); idx += 3)
+                if (WeatherSplitItems.Any(split => nodeItem.Contains(split)))
                 {
-                    if (nodeItems.Skip(idx).First() is string value)
+                    if (items.Count > 0)
                     {
-                        if (value == "내일")
-                            break;
+                        sb.Append(string.Join(" ", items));
+                        items.Clear();
+                    }
 
-                        sb.AppendLine(string.Join(" ", nodeItems.Skip(idx).Take(3)));
-                    }
-                    else
-                    {
-                        break;
-                    }
+                    items.Add($"\n{nodeItem}");
+                }
+                else
+                {
+                    items.Add(nodeItem);
                 }
             }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
 
+            if (items.Count > 0)
+                sb.Append(string.Join(" ", items));
+
+            // 첫 줄바꿈 제거
+            sb.Remove(0, 1);
             return sb.ToString();
         }
 

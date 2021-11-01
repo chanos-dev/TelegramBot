@@ -35,7 +35,7 @@ namespace chanosBot.Core
                     continue;
 
                 if (option.OptionLimitCounts < option.OptionList.Count)
-                    throw new ArgumentException($"{option.OptionName}의 옵션이 너무 많습니다.\n{string.Join(", ", option.OptionList)}");
+                    throw new ArgumentException($"({option.OptionName})의 옵션이 너무 많습니다.\n잘못된 옵션 : {string.Join(" ", option.OptionList)}");
             }
         }
 

@@ -65,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actions\ActionController.cs" />
+    <Compile Include="Actions\AutoAction.cs" />
     <Compile Include="Actions\LottoAction.cs" />
     <Compile Include="Actions\WeatherAction.cs" />
     <Compile Include="Bot\TelegramBot.cs" />

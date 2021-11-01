@@ -100,23 +100,7 @@ namespace chanosBot.Bot
                     return;
                 }
 
-                await Bot.SendTextMessageAsync(message.Chat.Id, botResponse.Message);
-
-                // 파일 처리
-                if (botResponse.HasFile)
-                {
-                    switch (botResponse.File.FileType)
-                    {
-                        case FileType.Url:
-                            var input = botResponse.File as InputOnlineFile;
-                            await Bot.SendPhotoAsync(message.Chat.Id, input, input.FileName);
-                            break;
-                    }
-
-                    Log.Logger.Information($"Send Photo : ({botResponse.File.FileType})");
-                }
-
-                // Auto Command Options 처리
+                // NOTE: 자동설정 커맨드가 있으면 설정 메시지만 보내기
                 if (botResponse.AutoCommand != null)
                 {
                     botResponse.AutoCommand.ChatID = message.Chat.Id;
@@ -124,9 +108,29 @@ namespace chanosBot.Bot
 
                     AutoCommandHelper.AddAutoCommand(botResponse.AutoCommand);
                     await Bot.SendTextMessageAsync(message.Chat.Id, "자동설정 되었습니다.");
-                }
 
-                Log.Logger.Information($"Send Message : ({botResponse.Message})");
+                    Log.Logger.Information($"Set AutoCommand : ({botResponse.AutoCommand})");
+                }
+                else
+                {
+                    await Bot.SendTextMessageAsync(message.Chat.Id, botResponse.Message);
+
+                    // 파일 처리
+                    if (botResponse.HasFile)
+                    {
+                        switch (botResponse.File.FileType)
+                        {
+                            case FileType.Url:
+                                var input = botResponse.File as InputOnlineFile;
+                                await Bot.SendPhotoAsync(message.Chat.Id, input, input.FileName);
+                                break;
+                        }
+
+                        Log.Logger.Information($"Send Photo : ({botResponse.File.FileType})");
+                    }
+
+                    Log.Logger.Information($"Send Message : ({botResponse.Message})");
+                }
             }
             catch (ArgumentException ae)
             {
@@ -141,6 +145,7 @@ namespace chanosBot.Bot
         #endregion
 
         #region Events
+        // TODO : Bot_OnMessage메서드와 Refactoring 필요
         private async void AutoCommandHelper_EventSendMessage(AutoCommand autoCommand)
         {
             var botResponse = autoCommand.Command.Execute(autoCommand.Options);

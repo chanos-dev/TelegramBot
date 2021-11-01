@@ -63,7 +63,10 @@ namespace chanosBot.Core
                             return;
 
                         if (!StructHelper.CompareTimeSpanHourMinutePair((TimeSpan)command.Time, curTime))
+                        {
                             command.IsSent = false;
+                            Log.Logger.Information($"Reset AutoCommand({command}) IsSent Flag => 'False' ");
+                        }
                     });
 
                     var startCommands = AutoCommands.Where(command =>

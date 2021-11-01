@@ -1,4 +1,5 @@
-﻿using chanosBot.Interface;
+﻿using chanosBot.Core;
+using chanosBot.Interface;
 using chanosBot.Model;
 using System;
 using System.Collections.Generic;
@@ -16,20 +17,30 @@ namespace chanosBot.Actions
 
         public LottoAction()
         {
-            CommandOptions = null;
+            CommandOptions = new[]
+            {
+                new Option()
+                {
+                    OptionName = CommandName,
+                    OptionLimitCounts = 1
+                }, 
+            };
         }
 
         public BotResponse Execute(params string[] options)
-        {
-            if (options.Length > 2)
-                throw new ArgumentException($"옵션이 너무 많습니다.\n예) {this.ToString()}");
+        { 
+            CommandOptions.FillOptionPair(options);
+            CommandOptions.VerifyOptionCount();
+
+            var inputCount = CommandOptions.FindOption(CommandName).OptionList.SingleOrDefault();
 
             var count = 1;
 
-            if (options.Length == 2 &&
-                int.TryParse(options[1], out int result) &&
-                result > 0)
-                count = result;
+            if (!string.IsNullOrEmpty(inputCount))
+            {
+                if (!int.TryParse(inputCount, out count))
+                    throw new ArgumentException($"{inputCount} 옵션의 값이잘못 됐습니다.\n{this}");
+            }
 
             var sb = new StringBuilder();
             var random = new Random();
