@@ -20,7 +20,7 @@ namespace chanosBot.Actions
 
         private string AUTO_COMMAND_OPTION = "/자동설정";
 
-        private string WeatherURL => "https://search.naver.com/search.naver?query=";
+        private string SearchURL => "https://search.naver.com/search.naver?query=";
 
         public string CommandName => "/날씨";
 
@@ -63,7 +63,7 @@ namespace chanosBot.Actions
             
             var location = string.Join(" ", CommandOptions.FindOption(CommandName).OptionList);
 
-            var url = $"{WeatherURL}{location} 날씨";            
+            var url = $"{SearchURL}{location} 날씨";            
 
             var htmlWeb = new HtmlWeb();
             HtmlDocument htmlDocument = htmlWeb.Load(url);

@@ -1,6 +1,8 @@
 ﻿using chanosBot.Core;
 using chanosBot.Interface;
 using chanosBot.Model;
+using HtmlAgilityPack;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +13,12 @@ namespace chanosBot.Actions
 {
     public class LottoAction : ICommand
     {
+        private string OptionPrize = "/정답";
+
+        private string SearchURL => "https://search.naver.com/search.naver?query=";
+
+        private string LottoURL => "https://www.dhlottery.co.kr/common.do?method=getLottoNumber&drwNo=";
+
         public string CommandName => "/로또";
 
         public Option[] CommandOptions { get; }
@@ -24,6 +32,11 @@ namespace chanosBot.Actions
                     OptionName = CommandName,
                     OptionLimitCounts = 1
                 }, 
+                new Option()
+                {
+                    OptionName = OptionPrize,
+                    OptionLimitCounts = 1,
+                }
             };
         }
 
@@ -33,7 +46,45 @@ namespace chanosBot.Actions
             CommandOptions.VerifyOptionCount();
 
             var inputCount = CommandOptions.FindOption(CommandName).OptionList.SingleOrDefault();
+            var prize = CommandOptions.FindOption(OptionPrize).OptionList.SingleOrDefault();
 
+            var response = new BotResponse();
+
+            if (options.Contains(OptionPrize))
+                response.Message = GetPrizeNumber(prize);
+            else
+                response.Message = GetLottoList(inputCount);
+
+            return response;
+        }
+
+        private string GetPrizeNumber(string prize)
+        {
+            var time = prize;
+            var htmlWeb = new HtmlWeb();
+            var url = string.Empty;
+
+            if (string.IsNullOrEmpty(time))
+            {
+                url = $"{SearchURL}로또 당첨번호";
+                
+                HtmlDocument searchHtmlDoc = htmlWeb.Load(url);
+                var node = searchHtmlDoc.DocumentNode.SelectSingleNode("//a[@class='_lotto-btn-current']");
+                
+                time = string.Join("", node.InnerText.TakeWhile(text => text != '회'));
+            }
+
+            url = $"{LottoURL}{time}";
+            
+            HtmlDocument lottoHemlDoc = htmlWeb.Load(url);
+
+            var lotto = JsonConvert.DeserializeObject<Lotto>(lottoHemlDoc.DocumentNode.InnerText);
+
+            return lotto.ToString();
+        }
+
+        private string GetLottoList(string inputCount)
+        {
             var count = 1;
 
             if (!string.IsNullOrEmpty(inputCount))
@@ -46,9 +97,9 @@ namespace chanosBot.Actions
             var random = new Random();
             var lotto = new HashSet<int>();
 
-            for(int idx = 0; idx < count; idx++)
+            for (int idx = 0; idx < count; idx++)
             {
-                while(lotto.Count < 6)
+                while (lotto.Count < 6)
                 {
                     lotto.Add(random.Next(1, 46));
                 }
@@ -57,10 +108,7 @@ namespace chanosBot.Actions
                 lotto.Clear();
             }
 
-            return new BotResponse()
-            {
-                Message = sb.ToString(),
-            };
+            return sb.ToString();
         }
 
         /// <summary>
@@ -69,7 +117,11 @@ namespace chanosBot.Actions
         /// <returns></returns>
         public override string ToString()
         {
-            return $"{CommandName} [숫자(기본값 : 1)]";
+            var sb = new StringBuilder();
+            sb.AppendLine($"{CommandName} [숫자(기본값 : 1)]");
+            sb.Append($"{CommandName} {OptionPrize} [회차(기본값 : 최근)]");
+
+            return sb.ToString(); 
         }
     }
 }
