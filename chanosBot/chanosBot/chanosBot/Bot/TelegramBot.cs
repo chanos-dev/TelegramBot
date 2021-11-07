@@ -106,8 +106,9 @@ namespace chanosBot.Bot
                     botResponse.AutoCommand.ChatID = message.Chat.Id;
                     botResponse.AutoCommand.UserID = message.From.Id;
 
-                    AutoCommandHelper.AddAutoCommand(botResponse.AutoCommand);
-                    await Bot.SendTextMessageAsync(message.Chat.Id, "자동설정 되었습니다.");
+                    var msg = AutoCommandHelper.AddAutoCommand(botResponse.AutoCommand);
+
+                    await Bot.SendTextMessageAsync(message.Chat.Id, msg);
 
                     Log.Logger.Information($"Set AutoCommand : ({botResponse.AutoCommand})");
                 }

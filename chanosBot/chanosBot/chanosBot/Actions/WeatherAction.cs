@@ -58,6 +58,7 @@ namespace chanosBot.Actions
             if (options.Skip(1).Count() == 0)
                 throw new ArgumentException($"지역명은 필수 입니다.\n예) {this}");
 
+            CommandOptions.ClearOptionList();
             CommandOptions.FillOptionPair(options);
             CommandOptions.VerifyOptionCount();             
             

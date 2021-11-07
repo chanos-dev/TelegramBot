@@ -41,7 +41,8 @@ namespace chanosBot.Actions
         }
 
         public BotResponse Execute(params string[] options)
-        { 
+        {
+            CommandOptions.ClearOptionList();
             CommandOptions.FillOptionPair(options);
             CommandOptions.VerifyOptionCount();
 

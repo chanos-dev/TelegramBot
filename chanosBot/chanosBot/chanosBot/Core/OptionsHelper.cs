@@ -43,5 +43,11 @@ namespace chanosBot.Core
         {
             return options.Where(option => option.OptionName == key).FirstOrDefault();
         }
+
+        internal static void ClearOptionList(this Option[] options)
+        {
+            foreach (var option in options)
+                option.OptionList.Clear();
+        }
     }
 }

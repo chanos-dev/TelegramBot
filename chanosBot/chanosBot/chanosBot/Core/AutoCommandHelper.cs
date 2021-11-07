@@ -22,7 +22,7 @@ namespace chanosBot.Core
             AutoCommands = new HashSet<AutoCommand>(new AutoCommandComparer());
         }
 
-        public void AddAutoCommand(AutoCommand autoCommand)
+        public string AddAutoCommand(AutoCommand autoCommand)
         {
             // 이미 해당 유저/방에 세팅한 커맨드 값이 있으면 time만 바꿔주기.
             if (AutoCommands.Contains(autoCommand))
@@ -32,14 +32,18 @@ namespace chanosBot.Core
                 findAutoCommand.Options = autoCommand.Options;
                 findAutoCommand.Time = autoCommand.Time;
                 autoCommand.IsSent = false;
-
+                
                 Log.Logger.Information($"Modify Auto Command ({autoCommand})");
+
+                return $"자동설정이 수정됐습니다\n{autoCommand}";
             }
             else
             {
                 AutoCommands.Add(autoCommand);
 
                 Log.Logger.Information($"Add Auto Command ({autoCommand})");
+
+                return $"자동설정이 추가됐습니다\n{autoCommand}";
             }
         }
 
