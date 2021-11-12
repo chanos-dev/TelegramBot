@@ -5,12 +5,65 @@ using chanosBot.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using Telegram.Bot;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace TestCode
 {
     [TestClass]
     public class BotTest
-    { 
+    {
+        private TelegramBotClient Bot { get; set; }
+        [TestMethod]
+        public void MyTestMethod()
+        {
+            Bot = new TelegramBotClient("key");
+            
+            Bot.OnMessage += Bot_OnMessage;
+
+            Bot.OnUpdate += Bot_OnUpdate;
+
+            Bot.StartReceiving();
+
+            while(true)
+            {
+
+            }
+        }
+
+        private async void Bot_OnUpdate(object sender, Telegram.Bot.Args.UpdateEventArgs e)
+        {
+            var update = e.Update;
+
+            // 일반 : type -> Message
+            // 버튼 클릭 : type -> CallbackQuery
+
+            if (update.CallbackQuery != null)
+            {                
+                await Bot.SendTextMessageAsync(update.CallbackQuery.Message.Chat.Id, update.CallbackQuery.Data);
+            }
+
+        }
+
+        private async void Bot_OnMessage(object sender, Telegram.Bot.Args.MessageEventArgs e)
+        {
+            var message = e.Message;
+
+            var keyboard = new InlineKeyboardMarkup(new[]
+            {
+                new[] // first row
+                { 
+                    new InlineKeyboardButton { Text = "테스트", CallbackData = "악" },
+                },
+                new[] // second row
+                {
+                    new InlineKeyboardButton { Text = "Hello", CallbackData = "World" },
+                }
+            }); 
+
+            await Bot.SendTextMessageAsync(message.Chat.Id, "버튼", replyMarkup: keyboard);   
+        } 
+
         [TestMethod]
         public void WeatherActionExecute()
         {
