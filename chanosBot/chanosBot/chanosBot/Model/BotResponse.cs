@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.InputFiles;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace chanosBot.Model
 {
@@ -16,9 +17,20 @@ namespace chanosBot.Model
 
         internal bool HasFile => File != null;        
 
+        /// <summary>
+        /// 전송 이미지
+        /// </summary>
         internal IInputFile File { get; set; }
 
+        /// <summary>
+        /// 커맨드 자동설정
+        /// </summary>
         internal AutoCommand AutoCommand { get; set; }
+
+        /// <summary>
+        /// 커맨드 버튼
+        /// </summary>
+        internal InlineKeyboardMarkup Keyboard { get; set; }
 
         protected virtual void Dispose(bool disposing)
         {

@@ -44,17 +44,20 @@ namespace chanosBot.Actions
         {
             CommandOptions.ClearOptionList();
             CommandOptions.FillOptionPair(options);
-            CommandOptions.VerifyOptionCount();
-
-            var inputCount = CommandOptions.FindOption(CommandName).OptionList.SingleOrDefault();
-            var prize = CommandOptions.FindOption(OptionPrize).OptionList.SingleOrDefault();
+            CommandOptions.VerifyOptionCount();                      
 
             var response = new BotResponse();
 
             if (options.Contains(OptionPrize))
+            {
+                var prize = CommandOptions.FindOption(OptionPrize).OptionList.SingleOrDefault();
                 response.Message = GetPrizeNumber(prize);
+            }
             else
+            {
+                var inputCount = CommandOptions.FindOption(CommandName).OptionList.SingleOrDefault();
                 response.Message = GetLottoList(inputCount);
+            }
 
             return response;
         }

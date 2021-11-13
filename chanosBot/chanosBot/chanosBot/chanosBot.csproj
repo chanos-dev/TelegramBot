@@ -66,8 +66,13 @@
   <ItemGroup>
     <Compile Include="Actions\ActionController.cs" />
     <Compile Include="Actions\AutoAction.cs" />
+    <Compile Include="Actions\DeliveryAction.cs" />
     <Compile Include="Actions\LottoAction.cs" />
     <Compile Include="Actions\WeatherAction.cs" />
+    <Compile Include="API\APIResponse.cs" />
+    <Compile Include="API\BaseAPI.cs" />
+    <Compile Include="API\Defines.cs" />
+    <Compile Include="API\DeliveryAPI.cs" />
     <Compile Include="Bot\TelegramBot.cs" />
     <Compile Include="chanosBotService.cs">
       <SubType>Component</SubType>
@@ -83,6 +88,7 @@
     <Compile Include="Interface\ICommand.cs" />
     <Compile Include="Model\AutoCommand.cs" />
     <Compile Include="Model\BotResponse.cs" />
+    <Compile Include="Model\Delivery\Company.cs" />
     <Compile Include="Model\Lotto.cs" />
     <Compile Include="Model\Option.cs" />
     <Compile Include="Model\Time.cs" />
