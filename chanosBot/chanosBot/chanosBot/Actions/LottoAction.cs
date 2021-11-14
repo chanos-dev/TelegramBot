@@ -125,6 +125,7 @@ namespace chanosBot.Actions
         public override string ToString()
         {
             var sb = new StringBuilder();
+            sb.AppendLine($"💲 로또 커맨드 정보 💲");
             sb.AppendLine($"{CommandName} [숫자(기본값 : 1)]");
             sb.Append($"{CommandName} {OptionPrize} [회차(기본값 : 최근)]");
 

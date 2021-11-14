@@ -13,6 +13,8 @@ namespace chanosBot.API
 
         public bool IsEmptyKey => string.IsNullOrEmpty(APIKey);
 
+        protected string ContentType { get; set; }
+
         protected abstract string BaseURL { get; }
 
         protected abstract string[] MiddleURL { get; set; }
@@ -22,6 +24,8 @@ namespace chanosBot.API
         private string APIURL => string.Join("/", Enumerable.Concat(new[] { BaseURL }, MiddleURL).Concat(new[] { MethodName }));
 
         protected Dictionary<string, string> QueryParameters { get; set; }
+
+        protected string QueryParametersToString => string.Join("&", QueryParameters.Select(qp => $"{qp.Key}={qp.Value}"));
 
         public BaseAPI() { } 
 
@@ -63,7 +67,7 @@ namespace chanosBot.API
             if (QueryParameters is null)
                 return APIURL;
 
-            return $"{APIURL}?{string.Join("&", QueryParameters.Select(qp => $"{qp.Key}={qp.Value}"))}";
+            return $"{APIURL}?{QueryParametersToString}";
         }
     }
 }

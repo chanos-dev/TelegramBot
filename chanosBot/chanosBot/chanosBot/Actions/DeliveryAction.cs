@@ -1,6 +1,7 @@
 ﻿using chanosBot.API;
 using chanosBot.Converter;
 using chanosBot.Core;
+using chanosBot.Enum;
 using chanosBot.Interface;
 using chanosBot.Model;
 using chanosBot.Model.Delivery;
@@ -8,22 +9,30 @@ using HtmlAgilityPack;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
+using Telegram.Bot.Types.InputFiles;
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace chanosBot.Actions
 {
+
+
     public class DeliveryAction : ICommand
     {
         private string DeliveryListURL => "https://info.sweettracker.co.kr/v2/api-docs";
+
         private DeliveryAPI DeliveryAPI { get; set; }
 
         private string OptionRegisterApiKey = "/등록";
 
         private string OptionDeliveryList = "/리스트";
+
+        private string OptionDeliveryTracking = "/조회";
 
         public string CommandName => "/택배";
 
@@ -49,7 +58,12 @@ namespace chanosBot.Actions
                 {
                     OptionName = OptionRegisterApiKey,
                     OptionLimitCounts = 1,
-                }
+                },
+                new Option()
+                {
+                    OptionName = OptionDeliveryTracking,
+                    OptionLimitCounts = 3,
+                },
             };
         }
 
@@ -73,11 +87,55 @@ namespace chanosBot.Actions
             else if (options.Contains(OptionDeliveryList))
             {
                 var type = CommandOptions.FindOption(OptionDeliveryList).OptionList.SingleOrDefault();
-                response.Message = "택배사 목록";
+                response.Message = "🚚 택배사 목록\n택배사를 선택해 조회 코드를 확인하세요.";
                 response.Keyboard = GetDeliveryList(type);
+            }
+            else if (options.Contains(OptionDeliveryTracking))
+            {
+                var codes = CommandOptions.FindOption(OptionDeliveryTracking).OptionList.ToArray();
+
+                if (codes.Contains("/이미지"))
+                {
+                    response.Message = "🔎 택배정보 조회 🔍";
+                    response.File = new InputFileStream(GetImageDeliveryTracking(codes));
+                }
+                else
+                {
+                    response.Message = GetTextDeliveryTracking(codes);
+                }
             }
 
             return response;
+        }
+
+        private Stream GetImageDeliveryTracking(string[] codes)
+        {
+            if (codes.Length < 2)
+                throw new ArgumentException($"[조회 코드] [운송장 코드]의 정보가 부족합니다.\n\n{this}");
+
+            var stream = DeliveryAPI.GetImageDeliveryTracking(codes[0], codes[1]);
+
+            if (stream is null)
+                throw new WebException("택배 정보를 조회할 수 없습니다.\n\n잠시 후 재시도 해주세요.");
+
+            return stream;
+        }
+
+        private string GetTextDeliveryTracking(string[] codes)
+        {
+            if (codes.Length < 2)
+                throw new ArgumentException($"[조회 코드] [운송장 코드]의 정보가 부족합니다.\n\n{this}");
+
+            var response = DeliveryAPI.GetTextDeliveryTracking(codes[0], codes[1]).Result;
+
+            if (response.StatusCode != HttpStatusCode.OK)
+            {
+                var error = JsonConvert.DeserializeObject<DeliveryErrorMessage>(response.Result);
+                throw new WebException(error.Msg);
+            }
+
+            return response.Result;
+            //JsonConvert.DeserializeObject<DeliveryCollection>(response.Result);
         }
 
         private InlineKeyboardMarkup GetDeliveryList(string type)
@@ -120,7 +178,7 @@ namespace chanosBot.Actions
                 buttons.Add(new InlineKeyboardButton()
                 {
                     Text = delivery.Name,
-                    CallbackData = delivery.Code,
+                    CallbackData = $"🏢{delivery.Name}의 조회 코드 : {delivery.Code}",
                 });
 
                 if (buttons.Count == 3)
@@ -138,66 +196,68 @@ namespace chanosBot.Actions
 
         private List<DeliveryCompany> GetDeliveryListFromHtml()
         {
-            var webClient = new WebClient();
-            webClient.Encoding = Encoding.UTF8;
-            var html = webClient.DownloadString(DeliveryListURL);
-
-            var roots = new[]
+            using (var webClient = new WebClient())
             {
+                webClient.Encoding = Encoding.UTF8;
+                var html = webClient.DownloadString(DeliveryListURL);
+
+                var roots = new[]
+                {
                 "info",
                 "description",
             };
 
-            var info = JsonConvert.DeserializeObject<string>(html, new SingleValueJsonConverter(roots));
+                var info = JsonConvert.DeserializeObject<string>(html, new SingleValueJsonConverter(roots));
 
-            var htmlDoc = new HtmlDocument();
-            htmlDoc.LoadHtml(info);
+                var htmlDoc = new HtmlAgilityPack.HtmlDocument();
+                htmlDoc.LoadHtml(info);
 
-            var nodes = htmlDoc.DocumentNode.SelectNodes("//table[@class='table table-bordered']/tbody");
+                var nodes = htmlDoc.DocumentNode.SelectNodes("//table[@class='table table-bordered']/tbody");
 
-            var deliveryCompanies = new List<DeliveryCompany>();
+                var deliveryCompanies = new List<DeliveryCompany>();
 
-            foreach (var node in nodes)
-            {
-                DeliveryLocationTypeEnum locationType = DeliveryLocationTypeEnum.Internal;
-
-                // DHL이 있으면 해외로 판단
-                if (node.InnerText.Contains("DHL"))
-                    locationType = DeliveryLocationTypeEnum.External;
-
-                var findNodes = node.ChildNodes.Where(trNode => trNode.Name == "tr").SelectMany(n =>
+                foreach (var node in nodes)
                 {
-                    var tdList = n.ChildNodes.Where(tdNode => tdNode.Name == "td").ToList();
+                    DeliveryLocationTypeEnum locationType = DeliveryLocationTypeEnum.Internal;
 
-                    List<string> companiesList = new List<string>();
+                    // DHL이 있으면 해외로 판단
+                    if (node.InnerText.Contains("DHL"))
+                        locationType = DeliveryLocationTypeEnum.External;
 
-                    for (int idx = 0; idx < tdList.Count; idx += 2)
+                    var findNodes = node.ChildNodes.Where(trNode => trNode.Name == "tr").SelectMany(n =>
                     {
-                        companiesList.Add($"{tdList[idx].InnerText}&{tdList[idx + 1].InnerText}");
-                    }
+                        var tdList = n.ChildNodes.Where(tdNode => tdNode.Name == "td").ToList();
 
-                    return companiesList;
-                });
+                        List<string> companiesList = new List<string>();
 
+                        for (int idx = 0; idx < tdList.Count; idx += 2)
+                        {
+                            companiesList.Add($"{tdList[idx].InnerText}&{tdList[idx + 1].InnerText}");
+                        }
 
-                // 찾은 택배사 add
-                foreach (var findNode in findNodes)
-                {
-                    var items = findNode.Split('&');
-
-                    if (items.Length != 2)
-                        continue;
-
-                    deliveryCompanies.Add(new DeliveryCompany()
-                    {
-                        Name = items[0],
-                        Code = items[1],
-                        Location = locationType
+                        return companiesList;
                     });
-                }
-            }
 
-            return deliveryCompanies;
+
+                    // 찾은 택배사 add
+                    foreach (var findNode in findNodes)
+                    {
+                        var items = findNode.Split('&');
+
+                        if (items.Length != 2)
+                            continue;
+
+                        deliveryCompanies.Add(new DeliveryCompany()
+                        {
+                            Name = items[0],
+                            Code = items[1],
+                            Location = locationType
+                        });
+                    }
+                }
+
+                return deliveryCompanies;
+            }
         } 
 
         private string SetApiKey(string apiKey)
@@ -213,8 +273,10 @@ namespace chanosBot.Actions
         public override string ToString()
         {
             var sb = new StringBuilder();
+            sb.AppendLine($"🚚 택배 커맨드 정보 🚚");            
             sb.AppendLine($"{CommandName} {OptionRegisterApiKey} [API KEY]");
-            sb.Append($"{CommandName} {OptionDeliveryList} [국내, 해외(기본값 : ALL)]");
+            sb.AppendLine($"{CommandName} {OptionDeliveryList} [국내, 해외(기본값 : ALL)]");
+            sb.Append($"{CommandName} {OptionDeliveryTracking} [조회 코드] [운송장 번호] [/이미지(옵션)]");
 
             return sb.ToString();
         }

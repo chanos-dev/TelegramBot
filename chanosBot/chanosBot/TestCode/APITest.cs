@@ -40,7 +40,7 @@ namespace TestCode
             var api = new DeliveryAPI();
             api.SetAPIKey("key");
 
-            var response = api.GetDeliveryTracking("04", "").Result;
+            var response = api.GetTextDeliveryTracking("04", "").Result;
 
             Console.WriteLine();
         }

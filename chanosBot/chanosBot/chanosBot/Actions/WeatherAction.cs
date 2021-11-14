@@ -257,6 +257,7 @@ namespace chanosBot.Actions
         public override string ToString()
         {
             var sb = new StringBuilder();
+            sb.AppendLine($"🌈 날씨 커맨드 정보 🌈");
             sb.AppendLine($"{CommandName} [지역]");
             sb.Append($"{CommandName} [지역] /자동설정 [시간(24시표기:0830)]");
 

@@ -33,8 +33,8 @@ namespace chanosBot.Core
 
             foreach (var option in options)
             {
-                //if (option.OptionLimitCounts == 0)
-                //    continue;
+                if (option.OptionLimitCounts == 0)
+                    continue;
 
                 if (option.OptionLimitCounts < option.OptionList.Count)
                 {

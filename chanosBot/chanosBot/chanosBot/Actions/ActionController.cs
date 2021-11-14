@@ -41,15 +41,38 @@ namespace chanosBot.Actions
             if (findCommand is null)
                 throw new ArgumentException($"지원하지 않는 명령어 입니다. ({message})");
 
+            if (this != findCommand &&
+                options.Contains("/도움말"))
+            {
+                findCommand = this;
+            }
+
             return findCommand.Execute(options);
+        }
+
+        internal BotResponse ReplyExecuteMessage(string message)
+        {
+            return this.Execute("/도움말");
         }
 
         public BotResponse Execute(params string[] options)
         {
-            return new BotResponse()
+            if (options.First() == CommandName)
             {
-                Message = string.Join(Environment.NewLine, Commands.Where(command => command.CommandName != this.CommandName)),
-            };
+                return new BotResponse()
+                {
+                    Message = string.Join("\n\n", Commands.Where(command => command.CommandName != this.CommandName)),
+                };
+            }
+            else
+            {
+                var findCommand = Commands.Where(command => command.CommandName == options.First()).SingleOrDefault();
+
+                return new BotResponse()
+                {
+                    Message = findCommand.ToString(),
+                };
+            }
         }
     }
 }

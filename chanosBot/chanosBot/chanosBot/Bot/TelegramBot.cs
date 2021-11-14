@@ -14,6 +14,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Args;
+using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InputFiles;
 
@@ -83,11 +84,35 @@ namespace chanosBot.Bot
         {
             var update = e.Update;
 
+            // reply data
             if (update.CallbackQuery != null)
             {
-                // reply data
                 await Bot.SendTextMessageAsync(update.CallbackQuery.Message.Chat.Id, update.CallbackQuery.Data);
                 Log.Logger.Information($"Reply CallBack Data : ({update.CallbackQuery.Data})");
+                
+                // reMarkup이 없으면 리턴 됐던 markup 사라짐
+                await Bot.EditMessageReplyMarkupAsync(update.CallbackQuery.Message.Chat.Id, update.CallbackQuery.Message.MessageId);
+
+                var message = update.CallbackQuery.Message;
+
+                try
+                {
+                    SendMessageToTelegram(ActionController.ReplyExecuteMessage(update.CallbackQuery.Data), message);
+                }
+                catch (ArgumentException ae)
+                {
+                    await Bot.SendTextMessageAsync(message.Chat.Id, ae.Message);
+                    Log.Logger.Fatal(ae, this.ToString());
+                }
+                catch (WebException we)
+                {
+                    await Bot.SendTextMessageAsync(message.Chat.Id, we.Message);
+                    Log.Logger.Fatal(we, this.ToString());
+                }
+                catch (Exception ex)
+                {
+                    Log.Logger.Fatal(ex, this.ToString());
+                } 
             } 
         }
 
@@ -105,54 +130,7 @@ namespace chanosBot.Bot
 
             try
             {
-                var botResponse = ActionController.GetExecuteMessage(message.Text);
-
-                if (botResponse.Message.Length > LIMIT_LENGTH)
-                {
-                    Log.Logger.Error($"Not support length of message than 4096.\n{message.Text}");
-                    await Bot.SendTextMessageAsync(message.Chat.Id, "지원되지 않는 텍스트 길이 입니다.");
-                    return;
-                }
-
-
-                if (botResponse.Keyboard != null)
-                {
-                    await Bot.SendTextMessageAsync(message.Chat.Id, botResponse.Message, replyMarkup: botResponse.Keyboard);
-
-                    Log.Logger.Information($"Send replyMarkup : ({botResponse.Keyboard.InlineKeyboard.Sum(s => s.Count())})");
-                }
-                // NOTE: 자동설정 커맨드가 있으면 설정 메시지만 보내기
-                else if (botResponse.AutoCommand != null)
-                {
-                    botResponse.AutoCommand.ChatID = message.Chat.Id;
-                    botResponse.AutoCommand.UserID = message.From.Id;
-
-                    var msg = AutoCommandHelper.AddAutoCommand(botResponse.AutoCommand);
-
-                    await Bot.SendTextMessageAsync(message.Chat.Id, msg);
-
-                    Log.Logger.Information($"Set AutoCommand : ({botResponse.AutoCommand})");
-                }
-                else
-                {
-                    await Bot.SendTextMessageAsync(message.Chat.Id, botResponse.Message);
-
-                    // 파일 처리
-                    if (botResponse.HasFile)
-                    {
-                        switch (botResponse.File.FileType)
-                        {
-                            case FileType.Url:
-                                var input = botResponse.File as InputOnlineFile;
-                                await Bot.SendPhotoAsync(message.Chat.Id, input, input.FileName);
-                                break;
-                        }
-
-                        Log.Logger.Information($"Send Photo : ({botResponse.File.FileType})");
-                    }
-
-                    Log.Logger.Information($"Send Message : ({botResponse.Message})");
-                }
+                SendMessageToTelegram(ActionController.GetExecuteMessage(message.Text), message);
             }
             catch (ArgumentException ae)
             {
@@ -169,6 +147,63 @@ namespace chanosBot.Bot
                 Log.Logger.Fatal(ex, this.ToString());
             }
         }
+
+        private async void SendMessageToTelegram(BotResponse botResponse, Message message)
+        {
+            if (botResponse.Message.Length > LIMIT_LENGTH)
+            {
+                Log.Logger.Error($"Not support length of message than 4096.\n{message.Text}");
+                await Bot.SendTextMessageAsync(message.Chat.Id, "지원되지 않는 텍스트 길이 입니다.");
+                return;
+            }
+
+
+            if (botResponse.Keyboard != null)
+            {
+                await Bot.SendTextMessageAsync(message.Chat.Id, botResponse.Message, replyMarkup: botResponse.Keyboard);
+
+                Log.Logger.Information($"Send replyMarkup : ({botResponse.Keyboard.InlineKeyboard.Sum(s => s.Count())})");
+            }
+            // NOTE: 자동설정 커맨드가 있으면 설정 메시지만 보내기
+            else if (botResponse.AutoCommand != null)
+            {
+                botResponse.AutoCommand.ChatID = message.Chat.Id;
+                botResponse.AutoCommand.UserID = message.From.Id;
+
+                var msg = AutoCommandHelper.AddAutoCommand(botResponse.AutoCommand);
+
+                await Bot.SendTextMessageAsync(message.Chat.Id, msg);
+
+                Log.Logger.Information($"Set AutoCommand : ({botResponse.AutoCommand})");
+            }
+            else
+            {
+                await Bot.SendTextMessageAsync(message.Chat.Id, botResponse.Message);
+
+                // 파일 처리
+                if (botResponse.HasFile)
+                {
+                    switch (botResponse.File.FileType)
+                    {
+                        case FileType.Url:
+                            var input = botResponse.File as InputOnlineFile;
+                            await Bot.SendPhotoAsync(message.Chat.Id, input, input.FileName);
+                            break;
+                        case FileType.Stream:
+                            var stream = botResponse.File as InputFileStream;
+                            InputOnlineFile file = new InputOnlineFile(stream.Content);
+                            file.Content.Position = 0;
+                            await Bot.SendPhotoAsync(message.Chat.Id, file, "sorry..");
+                            break;
+                    }
+                    
+                    Log.Logger.Information($"Send Photo : ({botResponse.File.FileType})");
+                }
+
+                Log.Logger.Information($"Send Message : ({botResponse.Message})");
+            }
+        }
+
         #endregion
 
         #region Events
