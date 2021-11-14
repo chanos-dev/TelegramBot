@@ -60,8 +60,11 @@ namespace chanosBot.Actions
 
             CommandOptions.ClearOptionList();
             CommandOptions.FillOptionPair(options);
-            CommandOptions.VerifyOptionCount();             
-            
+            if (!CommandOptions.VerifyOptionCount(out string errorMessage))
+            {
+                throw new ArgumentException($"{errorMessage}\n\n{this}");
+            }
+
             var location = string.Join(" ", CommandOptions.FindOption(CommandName).OptionList);
 
             var url = $"{SearchURL}{location} 날씨";            

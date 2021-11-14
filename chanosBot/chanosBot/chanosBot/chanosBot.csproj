@@ -81,6 +81,7 @@
       <DependentUpon>chanosBotService.cs</DependentUpon>
     </Compile>
     <Compile Include="Common\StructHelper.cs" />
+    <Compile Include="Converter\SingleValueJsonConverter.cs" />
     <Compile Include="Core\AutoCommandHelper.cs" />
     <Compile Include="Core\ByteHelper.cs" />
     <Compile Include="Core\OptionsHelper.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="Model\AutoCommand.cs" />
     <Compile Include="Model\BotResponse.cs" />
     <Compile Include="Model\Delivery\Company.cs" />
+    <Compile Include="Model\Delivery\DeliveryErrorMessage.cs" />
     <Compile Include="Model\Lotto.cs" />
     <Compile Include="Model\Option.cs" />
     <Compile Include="Model\Time.cs" />

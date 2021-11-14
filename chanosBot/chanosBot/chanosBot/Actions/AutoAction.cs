@@ -23,9 +23,10 @@ namespace chanosBot.Actions
         public BotResponse Execute(params string[] options)
         {
             CommandOptions.FillOptionPair(options);
-            CommandOptions.VerifyOptionCount();
-
-
+            if (!CommandOptions.VerifyOptionCount(out string errorMessage))
+            {
+                throw new ArgumentException($"{errorMessage}\n\n{this}");
+            }
 
             return new BotResponse()
             {

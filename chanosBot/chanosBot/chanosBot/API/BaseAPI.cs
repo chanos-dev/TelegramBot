@@ -17,16 +17,13 @@ namespace chanosBot.API
 
         protected abstract string[] MiddleURL { get; set; }
 
-        protected string MethodAPI { get; set; }
+        protected string MethodName { get; set; }
 
-        private string APIURL => string.Join("/", Enumerable.Concat(new[] { BaseURL }, MiddleURL).Concat(new[] { MethodAPI }));
+        private string APIURL => string.Join("/", Enumerable.Concat(new[] { BaseURL }, MiddleURL).Concat(new[] { MethodName }));
 
         protected Dictionary<string, string> QueryParameters { get; set; }
 
-        public BaseAPI()
-        {
-
-        }
+        public BaseAPI() { } 
 
         public BaseAPI(string key)
         {
@@ -38,8 +35,7 @@ namespace chanosBot.API
             this.APIKey = key;
         }
 
-
-        public async Task<APIResponse> Get()
+        protected async Task<APIResponse> Get()
         {
             try
             {
@@ -49,7 +45,7 @@ namespace chanosBot.API
                 {
                     HttpResponseMessage httpresponse = await httpClient.GetAsync(GetAPIURLWithParameter());
 
-                    httpresponse.EnsureSuccessStatusCode();
+                    //httpresponse.EnsureSuccessStatusCode();
                     response.Result = httpresponse.Content.ReadAsStringAsync().Result;
                     response.StatusCode = httpresponse.StatusCode;
                 }

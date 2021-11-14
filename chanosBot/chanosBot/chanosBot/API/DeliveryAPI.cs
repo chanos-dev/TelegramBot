@@ -22,11 +22,27 @@ namespace chanosBot.API
 
         public async Task<APIResponse> GetDeliveryList()
         { 
-            MethodAPI = "companylist";
+            MethodName = "companylist";
 
             QueryParameters = new Dictionary<string, string>()
             {
                 ["t_key"] = APIKey,
+            };
+
+            var response = await Get();
+
+            return response;
+        }
+
+        public async Task<APIResponse> GetDeliveryTracking(string code, string invoice)
+        {
+            MethodName = "trackingInfo";
+
+            QueryParameters = new Dictionary<string, string>()
+            {
+                ["t_key"] = APIKey,
+                ["t_code"] = code,
+                ["t_invoice"] = invoice,
             };
 
             var response = await Get();

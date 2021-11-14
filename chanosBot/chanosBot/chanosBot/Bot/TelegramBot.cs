@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -71,10 +72,23 @@ namespace chanosBot.Bot
             var me = await Bot.GetMeAsync(); 
 
             Bot.OnMessage += Bot_OnMessage;
+            Bot.OnUpdate += Bot_OnUpdate;
 
             Log.Logger.Information($"Initialize {me.FirstName} Bot.");
 
             IsRead = false;
+        }
+
+        private async void Bot_OnUpdate(object sender, UpdateEventArgs e)
+        {
+            var update = e.Update;
+
+            if (update.CallbackQuery != null)
+            {
+                // reply data
+                await Bot.SendTextMessageAsync(update.CallbackQuery.Message.Chat.Id, update.CallbackQuery.Data);
+                Log.Logger.Information($"Reply CallBack Data : ({update.CallbackQuery.Data})");
+            } 
         }
 
         private async void Bot_OnMessage(object sender, MessageEventArgs e)
@@ -100,8 +114,15 @@ namespace chanosBot.Bot
                     return;
                 }
 
+
+                if (botResponse.Keyboard != null)
+                {
+                    await Bot.SendTextMessageAsync(message.Chat.Id, botResponse.Message, replyMarkup: botResponse.Keyboard);
+
+                    Log.Logger.Information($"Send replyMarkup : ({botResponse.Keyboard.InlineKeyboard.Sum(s => s.Count())})");
+                }
                 // NOTE: 자동설정 커맨드가 있으면 설정 메시지만 보내기
-                if (botResponse.AutoCommand != null)
+                else if (botResponse.AutoCommand != null)
                 {
                     botResponse.AutoCommand.ChatID = message.Chat.Id;
                     botResponse.AutoCommand.UserID = message.From.Id;
@@ -137,6 +158,11 @@ namespace chanosBot.Bot
             {
                 await Bot.SendTextMessageAsync(message.Chat.Id, ae.Message);
                 Log.Logger.Fatal(ae, this.ToString());
+            }
+            catch (WebException we)
+            {
+                await Bot.SendTextMessageAsync(message.Chat.Id, we.Message);
+                Log.Logger.Fatal(we, this.ToString());
             }
             catch (Exception ex)
             {

@@ -7,6 +7,12 @@ using System.Threading.Tasks;
 
 namespace chanosBot.Model.Delivery
 {
+    public enum DeliveryLocationTypeEnum
+    {
+        Internal,
+        External,
+    }
+
     public class DeliveryCollection
     {
         [JsonProperty("Company")]
@@ -15,6 +21,9 @@ namespace chanosBot.Model.Delivery
 
     public class DeliveryCompany
     {
+        [JsonIgnore]
+        public DeliveryLocationTypeEnum Location { get; set; }
+
         public string Code { get; set; }
         public string Name { get; set; }
     } 

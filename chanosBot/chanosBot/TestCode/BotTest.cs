@@ -23,6 +23,10 @@ namespace TestCode
 
             Bot.OnUpdate += Bot_OnUpdate;
 
+            Bot.OnInlineQuery += Bot_OnInlineQuery;
+
+            Bot.OnCallbackQuery += Bot_OnCallbackQuery;
+
             Bot.StartReceiving();
 
             while(true)
@@ -31,16 +35,27 @@ namespace TestCode
             }
         }
 
+        private async void Bot_OnInlineQuery(object sender, Telegram.Bot.Args.InlineQueryEventArgs e)
+        {
+            var aa = e.InlineQuery.Id;
+        }
+
+        private async void Bot_OnCallbackQuery(object sender, Telegram.Bot.Args.CallbackQueryEventArgs e)
+        {
+            await Bot.SendTextMessageAsync(e.CallbackQuery.Message.Chat.Id, "empty");
+        }
+
         private async void Bot_OnUpdate(object sender, Telegram.Bot.Args.UpdateEventArgs e)
         {
             var update = e.Update;
 
             // 일반 : type -> Message
             // 버튼 클릭 : type -> CallbackQuery
-
             if (update.CallbackQuery != null)
-            {                
+            {
                 await Bot.SendTextMessageAsync(update.CallbackQuery.Message.Chat.Id, update.CallbackQuery.Data);
+
+                await Bot.AnswerCallbackQueryAsync(update.CallbackQuery.Id);
             }
 
         }
@@ -52,16 +67,16 @@ namespace TestCode
             var keyboard = new InlineKeyboardMarkup(new[]
             {
                 new[] // first row
-                { 
-                    new InlineKeyboardButton { Text = "테스트", CallbackData = "악" },
+                {
+                    new InlineKeyboardButton { Text = "테스트", CallbackData = "테스트1" },
                 },
                 new[] // second row
                 {
                     new InlineKeyboardButton { Text = "Hello", CallbackData = "World" },
                 }
-            }); 
+            });
 
-            await Bot.SendTextMessageAsync(message.Chat.Id, "버튼", replyMarkup: keyboard);   
+            await Bot.SendTextMessageAsync(message.Chat.Id, "버튼", replyMarkup: keyboard);
         } 
 
         [TestMethod]

@@ -44,7 +44,10 @@ namespace chanosBot.Actions
         {
             CommandOptions.ClearOptionList();
             CommandOptions.FillOptionPair(options);
-            CommandOptions.VerifyOptionCount();                      
+            if (!CommandOptions.VerifyOptionCount(out string errorMessage))
+            {
+                throw new ArgumentException($"{errorMessage}\n\n{this}");
+            }
 
             var response = new BotResponse();
 
@@ -94,7 +97,7 @@ namespace chanosBot.Actions
             if (!string.IsNullOrEmpty(inputCount))
             {
                 if (!int.TryParse(inputCount, out count))
-                    throw new ArgumentException($"{inputCount} 옵션의 값이잘못 됐습니다.\n{this}");
+                    throw new ArgumentException($"{inputCount} 옵션의 값이잘못 됐습니다.\n\n{this}");
             }
 
             var sb = new StringBuilder();
