@@ -13,7 +13,7 @@ namespace chanosBot.Model
     { 
         private bool disposedValue;
 
-        internal string Message { get; set; }
+        internal string Message { get; set; } = string.Empty;
 
         internal bool HasFile => File != null;        
 

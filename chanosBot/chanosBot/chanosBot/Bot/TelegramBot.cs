@@ -87,17 +87,12 @@ namespace chanosBot.Bot
             // reply data
             if (update.CallbackQuery != null)
             {
-                await Bot.SendTextMessageAsync(update.CallbackQuery.Message.Chat.Id, update.CallbackQuery.Data);
-                Log.Logger.Information($"Reply CallBack Data : ({update.CallbackQuery.Data})");
-                
-                // reMarkup이 없으면 리턴 됐던 markup 사라짐
-                await Bot.EditMessageReplyMarkupAsync(update.CallbackQuery.Message.Chat.Id, update.CallbackQuery.Message.MessageId);
-
                 var message = update.CallbackQuery.Message;
 
                 try
-                {
-                    SendMessageToTelegram(ActionController.ReplyExecuteMessage(update.CallbackQuery.Data), message);
+                { 
+                    await SendMessageToTelegram(ActionController.ReplyExecuteMessage(update.CallbackQuery.Data), message, isEdit: true);
+                    Log.Logger.Information($"Reply CallBack Data : ({update.CallbackQuery.Data})");
                 }
                 catch (ArgumentException ae)
                 {
@@ -112,7 +107,7 @@ namespace chanosBot.Bot
                 catch (Exception ex)
                 {
                     Log.Logger.Fatal(ex, this.ToString());
-                } 
+                }
             } 
         }
 
@@ -126,11 +121,11 @@ namespace chanosBot.Bot
             {
                 Log.Logger.Warning($"Not support this command ({message.Text})");
                 return;
-            } 
+            }
 
             try
             {
-                SendMessageToTelegram(ActionController.GetExecuteMessage(message.Text), message);
+                await SendMessageToTelegram(ActionController.GetExecuteMessage(message.Text), message);
             }
             catch (ArgumentException ae)
             {
@@ -148,7 +143,7 @@ namespace chanosBot.Bot
             }
         }
 
-        private async void SendMessageToTelegram(BotResponse botResponse, Message message)
+        private async Task SendMessageToTelegram(BotResponse botResponse, Message message, bool isEdit = false)
         {
             if (botResponse.Message.Length > LIMIT_LENGTH)
             {
@@ -160,7 +155,10 @@ namespace chanosBot.Bot
 
             if (botResponse.Keyboard != null)
             {
-                await Bot.SendTextMessageAsync(message.Chat.Id, botResponse.Message, replyMarkup: botResponse.Keyboard);
+                if (isEdit)
+                    await Bot.EditMessageTextAsync(message.Chat.Id, message.MessageId, botResponse.Message, replyMarkup: botResponse.Keyboard);
+                else
+                    await Bot.SendTextMessageAsync(message.Chat.Id, botResponse.Message, replyMarkup: botResponse.Keyboard);
 
                 Log.Logger.Information($"Send replyMarkup : ({botResponse.Keyboard.InlineKeyboard.Sum(s => s.Count())})");
             }
@@ -193,15 +191,15 @@ namespace chanosBot.Bot
                             var stream = botResponse.File as InputFileStream;
                             InputOnlineFile file = new InputOnlineFile(stream.Content);
                             file.Content.Position = 0;
-                            await Bot.SendPhotoAsync(message.Chat.Id, file, "sorry..");
+                            await Bot.SendPhotoAsync(message.Chat.Id, file);
                             break;
                     }
-                    
+
                     Log.Logger.Information($"Send Photo : ({botResponse.File.FileType})");
                 }
 
                 Log.Logger.Information($"Send Message : ({botResponse.Message})");
-            }
+            } 
         }
 
         #endregion

@@ -33,5 +33,10 @@ namespace chanosBot.Actions
                 Message = "",
             };
         }
+
+        public BotResponse Replay(params string[] options)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

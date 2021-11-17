@@ -18,7 +18,17 @@ namespace chanosBot.API
         private string DeliveryTrackingURL => $"https://info.sweettracker.co.kr/tracking/{TemplateType:d}";
 
         protected override string BaseURL => "http://info.sweettracker.co.kr";
+
         protected override string[] MiddleURL { get; set; }
+
+        public string SetTemplateType(EnumTemplateTypeValue templateTypeValue)
+        {
+            var prevType = TemplateType;
+
+            TemplateType = templateTypeValue;
+
+            return $"템플릿 타입 변경 완료\n{prevType} -> {templateTypeValue}";
+        }
 
         public DeliveryAPI()
         {
@@ -88,14 +98,11 @@ namespace chanosBot.API
 
                         browser.Size = new Size(450, browser.Document.Body.ScrollRectangle.Height);
 
-                        //var ms = new MemoryStream();
-
                         using (var bitmap = new Bitmap(browser.Document.Body.ScrollRectangle.Width, browser.Document.Body.ScrollRectangle.Height))
                         {
                             browser.DrawToBitmap(bitmap, new Rectangle(0, 0, browser.Document.Body.ScrollRectangle.Width, browser.Document.Body.ScrollRectangle.Height));
 
                             bitmap.Save(ms, ImageFormat.Jpeg);
-                            bitmap.Save("Hello.jpg");
                         }
 
                         //return ms;

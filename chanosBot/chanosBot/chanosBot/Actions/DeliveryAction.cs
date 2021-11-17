@@ -34,6 +34,8 @@ namespace chanosBot.Actions
 
         private string OptionDeliveryTracking = "/조회";
 
+        private string OptionDeliveryEdit = "/변경";
+
         public string CommandName => "/택배";
 
         public Option[] CommandOptions { get; }
@@ -64,6 +66,11 @@ namespace chanosBot.Actions
                     OptionName = OptionDeliveryTracking,
                     OptionLimitCounts = 3,
                 },
+                new Option()
+                {
+                    OptionName = OptionDeliveryEdit,
+                    OptionLimitCounts = 0,
+                }
             };
         }
 
@@ -104,8 +111,112 @@ namespace chanosBot.Actions
                     response.Message = GetTextDeliveryTracking(codes);
                 }
             }
+            else if (options.Contains(OptionDeliveryEdit))
+            {
+                var edit = CommandOptions.FindOption(OptionDeliveryEdit).OptionList.ToArray();
+
+                if (edit.Length == 0)
+                {
+                    response.Message = "👏 수정 메뉴 선택";
+                    response.Keyboard = GetEditingMenu();
+                }
+                else if (edit.Contains("/템플릿"))
+                {
+                    response.Message = "🧾 템플릿 선택";
+                    response.Keyboard = GetTemplateMenu();
+                }
+            }
 
             return response;
+        }
+
+        public BotResponse Replay(params string[] options)
+        {
+            CommandOptions.ClearOptionList();
+            CommandOptions.FillOptionPair(options);
+            if (!CommandOptions.VerifyOptionCount(out string errorMessage))
+            {
+                throw new ArgumentException($"{errorMessage}\n\n{this}");
+            }
+
+            var response = new BotResponse();
+
+            if (options.Contains(OptionDeliveryEdit))
+            {
+                var edit = CommandOptions.FindOption(OptionDeliveryEdit).OptionList.ToArray();
+
+                if (edit.Contains("/템플릿"))
+                {
+                    if (edit.Length == 1)
+                    {
+                        response.Message = "🧾 템플릿 선택";
+                        response.Keyboard = GetTemplateMenu();
+                    }
+                    else
+                    {                        
+                        response.Message = DeliveryAPI.SetTemplateType((EnumTemplateTypeValue)int.Parse(edit.Skip(1).First()));
+                    }
+                }
+            }
+
+            return response;
+        }
+
+        private InlineKeyboardMarkup GetTemplateMenu()
+        {
+            var buttonCollection = new List<List<InlineKeyboardButton>>()
+            {
+                new List<InlineKeyboardButton>()
+                {
+                    new InlineKeyboardButton()
+                    {
+                        Text = "Cyan",
+                        CallbackData = "/택배 /변경 /템플릿 1",
+                    },
+                    new InlineKeyboardButton()
+                    {
+                        Text = "Pink",
+                        CallbackData = "/택배 /변경 /템플릿 2",
+                    },
+                    new InlineKeyboardButton()
+                    {
+                        Text = "Gray",
+                        CallbackData = "/택배 /변경 /템플릿 3",
+                    },
+                },
+                new List<InlineKeyboardButton>()
+                {
+                    new InlineKeyboardButton()
+                    {
+                        Text = "Tropical",
+                        CallbackData = "/택배 /변경 /템플릿 4",
+                    },
+                    new InlineKeyboardButton()
+                    {
+                        Text = "Sky",
+                        CallbackData = "/택배 /변경 /템플릿 5",
+                    }, 
+                },
+            };
+
+            return new InlineKeyboardMarkup(buttonCollection);
+        }
+
+        private InlineKeyboardMarkup GetEditingMenu()
+        {
+            var buttonCollection = new List<List<InlineKeyboardButton>>()
+            {
+                new List<InlineKeyboardButton>()
+                {
+                    new InlineKeyboardButton()
+                    {
+                        Text = "템플릿 변경",
+                        CallbackData = "/택배 /변경 /템플릿",
+                    },
+                },
+            };
+
+            return new InlineKeyboardMarkup(buttonCollection);
         }
 
         private Stream GetImageDeliveryTracking(string[] codes)
@@ -203,9 +314,9 @@ namespace chanosBot.Actions
 
                 var roots = new[]
                 {
-                "info",
-                "description",
-            };
+                    "info",
+                    "description",
+                };
 
                 var info = JsonConvert.DeserializeObject<string>(html, new SingleValueJsonConverter(roots));
 
@@ -279,6 +390,6 @@ namespace chanosBot.Actions
             sb.Append($"{CommandName} {OptionDeliveryTracking} [조회 코드] [운송장 번호] [/이미지(옵션)]");
 
             return sb.ToString();
-        }
+        } 
     }
 }

@@ -52,8 +52,24 @@ namespace chanosBot.Actions
 
         internal BotResponse ReplyExecuteMessage(string message)
         {
-            return this.Execute("/도움말");
-        }
+            var items = message.Split(MESSAGE_SEPARATOR);
+
+            var inputCommand = items[0];
+            var options = items;// items.Skip(1).ToArray();
+
+            var findCommand = Commands.Where(command => command.CommandName == inputCommand).SingleOrDefault();
+
+            if (findCommand is null)
+                throw new ArgumentException($"지원하지 않는 명령어 입니다. ({message})");
+
+            if (this != findCommand &&
+                options.Contains("/도움말"))
+            {
+                findCommand = this;
+            }
+
+            return findCommand.Replay(options);
+        } 
 
         public BotResponse Execute(params string[] options)
         {
@@ -73,6 +89,11 @@ namespace chanosBot.Actions
                     Message = findCommand.ToString(),
                 };
             }
+        }
+
+        public BotResponse Replay(params string[] options)
+        {
+            throw new NotImplementedException();
         }
     }
 }

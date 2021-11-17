@@ -12,5 +12,7 @@ namespace chanosBot.Interface
         string CommandName { get; }
         Option[] CommandOptions { get; }
         BotResponse Execute(params string[] options);
+
+        BotResponse Replay(params string[] options);
     }
 }

@@ -131,5 +131,10 @@ namespace chanosBot.Actions
 
             return sb.ToString(); 
         }
+
+        public BotResponse Replay(params string[] options)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
