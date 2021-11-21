@@ -1,5 +1,7 @@
-﻿using System;
+﻿using chanosBot.Crypto;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -9,6 +11,15 @@ namespace chanosBot.API
 {
     public abstract class BaseAPI
     {
+        private AESCrypto Crypto { get; set; }
+        private string CryptoKey { get; set; }
+
+        private string APIPath => $@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\Bot\Keys";
+
+        protected virtual string APIFileName => "api.tbchan";
+
+        private string FileFullPath => Path.Combine(APIPath, APIFileName);
+
         protected string APIKey { get; set; }
 
         public bool IsEmptyKey => string.IsNullOrEmpty(APIKey);
@@ -27,16 +38,35 @@ namespace chanosBot.API
 
         protected string QueryParametersToString => string.Join("&", QueryParameters.Select(qp => $"{qp.Key}={qp.Value}"));
 
-        public BaseAPI() { } 
-
-        public BaseAPI(string key)
+        public BaseAPI() 
         {
-            this.APIKey = key;
+            Crypto = new AESCrypto();
+            CryptoKey = Crypto.CreateKey("chanostelegram1998margeletsonahc");
+
+            if (!Directory.Exists(APIPath))
+                Directory.CreateDirectory(APIPath);
         }
 
-        public void SetAPIKey(string key)
+        public BaseAPI(string key) : base()
         {
-            this.APIKey = key;
+            SetAPIKey(key);
+        }
+        
+        public void SetAPIKey(string apiKey)
+        {
+            this.APIKey = apiKey;
+
+            File.WriteAllText(FileFullPath, Crypto.Encrypt(CryptoKey, apiKey));
+        }
+
+        public void LoadAPIKey()
+        {
+            if (File.Exists(FileFullPath))
+            {
+                var data = File.ReadAllText(FileFullPath).Trim();
+
+                this.APIKey = Crypto.Decrypt(CryptoKey, data);
+            }
         }
 
         protected async Task<APIResponse> Get()

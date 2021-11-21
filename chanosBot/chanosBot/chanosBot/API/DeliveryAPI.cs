@@ -1,10 +1,14 @@
-﻿using chanosBot.Enum;
+﻿using chanosBot.Converter;
+using chanosBot.Enum;
+using chanosBot.Model.Delivery;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -14,6 +18,8 @@ namespace chanosBot.API
     public class DeliveryAPI : BaseAPI
     {
         private EnumTemplateTypeValue TemplateType { get; set; } = EnumTemplateTypeValue.Tropical;
+
+        private string DeliveryListURL => "https://info.sweettracker.co.kr/v2/api-docs";
 
         private string DeliveryTrackingURL => $"https://info.sweettracker.co.kr/tracking/{TemplateType:d}";
 
@@ -120,5 +126,71 @@ namespace chanosBot.API
 
             return ms;
         } 
+
+        public List<DeliveryCompany> GetDeliveryListFromHtml()
+        {
+            using (var webClient = new WebClient())
+            {
+                webClient.Encoding = Encoding.UTF8;
+                var html = webClient.DownloadString(DeliveryListURL);
+
+                var roots = new[]
+                {
+                    "info",
+                    "description",
+                };
+
+                var info = JsonConvert.DeserializeObject<string>(html, new SingleValueJsonConverter(roots));
+
+                var htmlDoc = new HtmlAgilityPack.HtmlDocument();
+                htmlDoc.LoadHtml(info);
+
+                var nodes = htmlDoc.DocumentNode.SelectNodes("//table[@class='table table-bordered']/tbody");
+
+                var deliveryCompanies = new List<DeliveryCompany>();
+
+                foreach (var node in nodes)
+                {
+                    DeliveryLocationTypeEnum locationType = DeliveryLocationTypeEnum.Internal;
+
+                    // DHL이 있으면 해외로 판단
+                    if (node.InnerText.Contains("DHL"))
+                        locationType = DeliveryLocationTypeEnum.External;
+
+                    var findNodes = node.ChildNodes.Where(trNode => trNode.Name == "tr").SelectMany(n =>
+                    {
+                        var tdList = n.ChildNodes.Where(tdNode => tdNode.Name == "td").ToList();
+
+                        List<string> companiesList = new List<string>();
+
+                        for (int idx = 0; idx < tdList.Count; idx += 2)
+                        {
+                            companiesList.Add($"{tdList[idx].InnerText}&{tdList[idx + 1].InnerText}");
+                        }
+
+                        return companiesList;
+                    });
+
+
+                    // 찾은 택배사 add
+                    foreach (var findNode in findNodes)
+                    {
+                        var items = findNode.Split('&');
+
+                        if (items.Length != 2)
+                            continue;
+
+                        deliveryCompanies.Add(new DeliveryCompany()
+                        {
+                            Name = items[0],
+                            Code = items[1],
+                            Location = locationType
+                        });
+                    }
+                }
+
+                return deliveryCompanies;
+            }
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using chanosBot.Common;
+using chanosBot.Crypto;
 using chanosBot.Model;
 using HtmlAgilityPack;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -186,6 +187,20 @@ namespace TestCode
             }
 
             return sb.ToString();
+        }
+
+        [TestMethod]
+        public void Crypto()
+        {
+            var aes = new AESCrypto();
+            var key = aes.CreateKey("01234567890123456789012345678901");
+
+            Console.WriteLine(key);
+
+            var encData = aes.Encrypt(key, "hello, world");
+
+            Console.WriteLine(encData);
+            Console.WriteLine(aes.Decrypt(key, encData));
         }
     } 
 }

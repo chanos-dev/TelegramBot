@@ -35,7 +35,7 @@ namespace chanosBot.Bot
         private string Token { get; set; }
         private bool IsRead { get; set; } = true;
 
-        private string LogPath => $@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\Bot";
+        private string LogPath => $@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\Bot\Log";
         private string LogFileName => "TelegramBot-chan.log";
         #endregion
 

@@ -75,6 +75,8 @@
     <Compile Include="API\BaseAPI.cs" />
     <Compile Include="API\Defines.cs" />
     <Compile Include="API\DeliveryAPI.cs" />
+    <Compile Include="Bot\Markup\BaseMarkup.cs" />
+    <Compile Include="Bot\Markup\DeliveryMarkup.cs" />
     <Compile Include="Bot\TelegramBot.cs" />
     <Compile Include="chanosBotService.cs">
       <SubType>Component</SubType>
@@ -87,6 +89,7 @@
     <Compile Include="Core\AutoCommandHelper.cs" />
     <Compile Include="Core\ByteHelper.cs" />
     <Compile Include="Core\OptionsHelper.cs" />
+    <Compile Include="Crypto\AESCrypto.cs" />
     <Compile Include="Enum\EnumTemplateValue.cs" />
     <Compile Include="Enum\EnumWeekValue.cs" />
     <Compile Include="Interface\ICommand.cs" />
