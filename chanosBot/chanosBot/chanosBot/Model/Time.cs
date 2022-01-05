@@ -49,21 +49,16 @@ namespace chanosBot.Model
         {
             time = Time.Empty();
 
-            if (int.TryParse(hour, out int thour))
+            if (int.TryParse(hour, out int thour) &&
+                int.TryParse(minute, out int tminute))
             {
                 time.Hour = thour;
-            }
-            else
-                return false;
-
-            if (int.TryParse(minute, out int tminute))
-            {
                 time.Minute = tminute;
             }
             else
+            {
                 return false;
-
-
+            }
 
             return time.CheckOutOfTime();
         }

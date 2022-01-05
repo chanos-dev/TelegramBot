@@ -39,7 +39,7 @@ namespace chanosBot.Actions
             var findCommand = Commands.Where(command => command.CommandName == inputCommand).SingleOrDefault();
             
             if (findCommand is null)
-                throw new ArgumentException($"지원하지 않는 명령어 입니다. ({message})");
+                throw new ArgumentException($"지원하지 않는 명령어 입니다.\n'/도움말'을 통해 명령어를 확인하세요.");
 
             if (this != findCommand &&
                 options.Contains("/도움말"))
@@ -60,7 +60,7 @@ namespace chanosBot.Actions
             var findCommand = Commands.Where(command => command.CommandName == inputCommand).SingleOrDefault();
 
             if (findCommand is null)
-                throw new ArgumentException($"지원하지 않는 명령어 입니다. ({message})");
+                throw new ArgumentException(message);
 
             if (this != findCommand &&
                 options.Contains("/도움말"))

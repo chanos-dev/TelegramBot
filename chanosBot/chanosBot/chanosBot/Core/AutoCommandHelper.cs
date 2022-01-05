@@ -29,13 +29,15 @@ namespace chanosBot.Core
             {
                 var findAutoCommand = AutoCommands.Where(AutoCommand => AutoCommand == autoCommand).Single();
 
+                var prevCommand = findAutoCommand.ToString();
+
                 findAutoCommand.Options = autoCommand.Options;
                 findAutoCommand.Time = autoCommand.Time;
                 autoCommand.IsSent = false;
                 
                 Log.Logger.Information($"Modify Auto Command ({autoCommand})");
 
-                return $"자동설정이 수정됐습니다\n{autoCommand}";
+                return $"자동설정이 수정됐습니다\n\n수정 전 👉 \n{prevCommand}\n\n수정 후 👉 \n{autoCommand}";
             }
             else
             {

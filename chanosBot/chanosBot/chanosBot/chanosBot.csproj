@@ -70,6 +70,10 @@
     <Compile Include="Actions\AutoAction.cs" />
     <Compile Include="Actions\DeliveryAction.cs" />
     <Compile Include="Actions\LottoAction.cs" />
+    <Compile Include="Actions\OptionActions\Delivery\OptionDeliveryEditAction.cs" />
+    <Compile Include="Actions\OptionActions\Delivery\OptionDeliveryListAction.cs" />
+    <Compile Include="Actions\OptionActions\Delivery\OptionDeliveryTrackingAction.cs" />
+    <Compile Include="Actions\OptionActions\Delivery\OptionRegisterApiKeyAction.cs" />
     <Compile Include="Actions\WeatherAction.cs" />
     <Compile Include="API\APIResponse.cs" />
     <Compile Include="API\BaseAPI.cs" />
@@ -93,6 +97,8 @@
     <Compile Include="Enum\EnumTemplateValue.cs" />
     <Compile Include="Enum\EnumWeekValue.cs" />
     <Compile Include="Interface\ICommand.cs" />
+    <Compile Include="Interface\IDeliveryOption.cs" />
+    <Compile Include="Interface\IOptions.cs" />
     <Compile Include="Model\AutoCommand.cs" />
     <Compile Include="Model\BotResponse.cs" />
     <Compile Include="Model\Delivery\Company.cs" />

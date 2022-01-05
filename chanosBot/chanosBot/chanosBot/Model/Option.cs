@@ -1,4 +1,5 @@
-﻿using System;
+﻿using chanosBot.Interface;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,5 +16,7 @@ namespace chanosBot.Model
         internal bool HasOption => OptionList.Count > 0;
 
         internal List<string> OptionList { get; set; } = new List<string>();
+
+        internal IOption OptionAction { get; set; }
     }
 }

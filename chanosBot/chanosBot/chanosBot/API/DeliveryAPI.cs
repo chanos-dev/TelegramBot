@@ -120,7 +120,7 @@ namespace chanosBot.API
                 }
             });
 
-            t.ApartmentState = System.Threading.ApartmentState.STA;
+            t.SetApartmentState(System.Threading.ApartmentState.STA);
             t.Start();
             t.Join();
 

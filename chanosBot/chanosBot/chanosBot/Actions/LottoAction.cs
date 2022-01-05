@@ -59,6 +59,10 @@ namespace chanosBot.Actions
             else
             {
                 var inputCount = CommandOptions.FindOption(CommandName).OptionList.SingleOrDefault();
+
+                if (inputCount is null)
+                    throw new ArgumentException(this.ToString());
+
                 response.Message = GetLottoList(inputCount);
             }
 
@@ -97,7 +101,7 @@ namespace chanosBot.Actions
             if (!string.IsNullOrEmpty(inputCount))
             {
                 if (!int.TryParse(inputCount, out count))
-                    throw new ArgumentException($"{inputCount} 옵션의 값이잘못 됐습니다.\n\n{this}");
+                    throw new ArgumentException(this.ToString());
             }
 
             var sb = new StringBuilder();
@@ -111,7 +115,7 @@ namespace chanosBot.Actions
                     lotto.Add(random.Next(1, 46));
                 }
 
-                sb.AppendLine($"{idx + 1} : {string.Join(",", lotto.OrderBy(l => l))}");
+                sb.AppendLine($"🎱 순번 {idx + 1} : {string.Join(",", lotto.OrderBy(l => l))}");
                 lotto.Clear();
             }
 
@@ -126,7 +130,7 @@ namespace chanosBot.Actions
         {
             var sb = new StringBuilder();
             sb.AppendLine($"💲 로또 커맨드 정보 💲");
-            sb.AppendLine($"{CommandName} [숫자(기본값 : 1)]");
+            sb.AppendLine($"{CommandName} [숫자]");
             sb.Append($"{CommandName} {OptionPrize} [회차(기본값 : 최근)]");
 
             return sb.ToString(); 

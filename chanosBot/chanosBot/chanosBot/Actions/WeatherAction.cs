@@ -56,7 +56,7 @@ namespace chanosBot.Actions
             // options => "성남시", "수정구", "/자동설정", "1130"
 
             if (options.Skip(1).Count() == 0)
-                throw new ArgumentException($"지역명은 필수 입니다.\n예) {this}");
+                throw new ArgumentException(this.ToString());
 
             CommandOptions.ClearOptionList();
             CommandOptions.FillOptionPair(options);
@@ -104,7 +104,7 @@ namespace chanosBot.Actions
                     if (Time.VerifyTime(hour, minute, out Time time))
                         autoCommand.Time = time;
                     else
-                        throw new ArgumentException("올바른 시간을 입력해주세요.");
+                        throw new ArgumentException("올바른 시간을 입력해주세요.\n( 0000 ~ 2359 )");
                 }
                 else
                     autoCommand.Time = Time.Empty();
