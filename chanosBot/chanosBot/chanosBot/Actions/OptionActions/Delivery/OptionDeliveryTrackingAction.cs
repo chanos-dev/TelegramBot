@@ -1,5 +1,6 @@
 ﻿using chanosBot.API;
 using chanosBot.Bot.Markup;
+using chanosBot.Converter;
 using chanosBot.Interface;
 using chanosBot.Model;
 using chanosBot.Model.Delivery;
@@ -52,7 +53,7 @@ namespace chanosBot.Actions.OptionActions.Delivery
             if (codes.Length < 2)
                 throw new ArgumentException($"[조회 코드] [운송장 코드]의 정보가 부족합니다.\n\n{this}");
 
-            var stream = DeliveryAPI.GetImageDeliveryTracking(codes[0], codes[1]);
+            var stream = DeliveryAPI.GetImageDeliveryTrackingOrNull(codes[0], codes[1]);
 
             if (stream is null)
                 throw new WebException("택배 정보를 조회할 수 없습니다.\n\n잠시 후 재시도 해주세요.");
@@ -73,7 +74,19 @@ namespace chanosBot.Actions.OptionActions.Delivery
                 throw new WebException(error.Msg);
             }
 
-            return response.Result;
+            var roots = new[]
+            {
+                "trackingDetails",
+            };
+
+            var trackings = JsonConvert.DeserializeObject<List<TrackingDetail>>(response.Result, new SingleValueJsonConverter(roots));
+
+            if (trackings.Count == 0)
+            {
+                return "정보를 불러올 수 없습니다.\n\n조회 코드 및 운송장 코드를 확인해주세요.";
+            }
+
+            return string.Join(string.Empty, trackings.OrderByDescending(t => t.Time));
         }
     }
 }

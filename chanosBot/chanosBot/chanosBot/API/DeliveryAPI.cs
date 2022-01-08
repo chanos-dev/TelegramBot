@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -75,7 +76,7 @@ namespace chanosBot.API
             return response;
         }
 
-        public Stream GetImageDeliveryTracking(string code, string invoice)
+        public Stream GetImageDeliveryTrackingOrNull(string code, string invoice)
         {
             ContentType = "application/x-www-form-urlencoded";
 
@@ -86,10 +87,8 @@ namespace chanosBot.API
                 ["t_invoice"] = invoice,
             };
 
-            // TODO : STA 관련 내용 알아보기...
             var ms = new MemoryStream();
-
-            System.Threading.Thread t = new System.Threading.Thread(() =>
+            Thread t = new Thread(() =>
             {
                 try
                 {
@@ -109,18 +108,16 @@ namespace chanosBot.API
                             browser.DrawToBitmap(bitmap, new Rectangle(0, 0, browser.Document.Body.ScrollRectangle.Width, browser.Document.Body.ScrollRectangle.Height));
 
                             bitmap.Save(ms, ImageFormat.Jpeg);
-                        }
-
-                        //return ms;
+                        } 
                     }
                 }
                 catch(Exception ex)
                 {
-
+                    ms = null;
                 }
             });
-
-            t.SetApartmentState(System.Threading.ApartmentState.STA);
+            
+            t.SetApartmentState(ApartmentState.STA);
             t.Start();
             t.Join();
 

@@ -151,7 +151,7 @@ namespace chanosBot.Actions
             sb.AppendLine($"🚚 택배 커맨드 정보 🚚");            
             sb.AppendLine($"{CommandName} {OptionRegisterApiKey} [API KEY]");
             sb.AppendLine($"{CommandName} {OptionDeliveryList} [국내, 해외(기본값 : 국내)]");
-            sb.Append($"{CommandName} {OptionDeliveryTracking} [조회 코드] [운송장 번호] [/이미지(옵션)]");
+            sb.AppendLine($"{CommandName} {OptionDeliveryTracking} [조회 코드] [운송장 번호] [/이미지(옵션)]");
             sb.Append($"{CommandName} {OptionDeliveryEdit}");
 
             return sb.ToString();
